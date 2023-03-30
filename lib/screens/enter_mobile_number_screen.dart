@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:wingman_machinetest/components/button.dart';
+import 'package:wingman_machinetest/components/textformfield.dart';
 import 'package:wingman_machinetest/screens/enter_otp_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:wingman_machinetest/utils/colors.dart';
@@ -18,6 +19,7 @@ class EnterMobileNumberScreen extends StatefulWidget {
 class _EnterMobileNumberScreenState extends State<EnterMobileNumberScreen> {
   final mobileController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _keyboardVisible = false;
 
   PostNumber() async {
     // print(mobileController.text);
@@ -44,6 +46,8 @@ class _EnterMobileNumberScreenState extends State<EnterMobileNumberScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _keyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
+    print(_keyboardVisible);
     return Scaffold(
         body: Container(
       color: WColors.primaryColor,
@@ -55,15 +59,24 @@ class _EnterMobileNumberScreenState extends State<EnterMobileNumberScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('OTP Verification'),
-                    SizedBox(
-                      height: Dimens.padding,
-                    ),
-                    Container(
-                      height: 200,
-                      width: 200,
-                      color: Colors.white,
-                    )
+                    _keyboardVisible
+                        ? SizedBox()
+                        : Column(
+                            children: [
+                              Text('OTP Verification'),
+                              SizedBox(
+                                height: Dimens.padding,
+                              ),
+                              InkWell(
+                                onTap: () => print(_keyboardVisible),
+                                child: Container(
+                                  height: 200,
+                                  width: 200,
+                                  color: Colors.white,
+                                ),
+                              )
+                            ],
+                          ),
                   ],
                 ),
               ),
@@ -85,50 +98,30 @@ class _EnterMobileNumberScreenState extends State<EnterMobileNumberScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Text('Welcome Back',style: TextStyle(fontWeight: FontWeight.w500,fontSize: 30),),
-                    // TextFormField(
-
-                    //   readOnly: true,
-                    //   decoration: InputDecoration(hintText: '+91  INDIA',focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: WColors.primaryColor))),),
-                    SizedBox(height: Dimens.padding,),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        fillColor: WColors.brightColor,
-                        filled: true,
-                        
-                        label: Text('Enter Mobile Number',),
-                          hintText: '+91',
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide:
-                                  BorderSide(color: WColors.primaryColor)),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide:
-                                  BorderSide(color: WColors.primaryColor))),
+                    SizedBox(
+                      height: Dimens.padding,
+                    ),
+                    WTextFormField(
+                      hintText: '+91',
+                      label: 'Enter Mobile Number',
+                      textEditingController: mobileController,
+                      textInputType: TextInputType.phone,
                     ),
                     SizedBox(
                       height: Dimens.padding,
                     ),
-
                     Text('We will send you one time password (OTP)'),
                     SizedBox(
                       height: Dimens.padding,
                     ),
-
                     Text('Carrier rates may apply'),
                     SizedBox(
                       height: Dimens.padding,
                     ),
-                    WButton(label: 'Continue',),
-
-                    // ClipRRect(
-                    //   borderRadius:  BorderRadius.circular(20),
-                    //   // height: 50,
-                    //   // width: MediaQuery.of(context).size.width,
-                    //   child: ElevatedButton(
-                    //       onPressed: () {}, child: Text('Continue ->')),
-                    // ),
+                    WButton(
+                      label: 'Continue',
+                      onPressed: PostNumber,
+                    ),
                   ],
                 ),
               ),
@@ -137,18 +130,7 @@ class _EnterMobileNumberScreenState extends State<EnterMobileNumberScreen> {
         ],
       ),
     )
-        // appBar: AppBar(
-        //   title: Text('Enter mobile number'),
-        // ),
-        // body: Column(
-        //   children: [
-        //     TextField(
-        //       controller: mobileController,
-        //       decoration: InputDecoration(hintText: 'Enter Mobile Number'),
-        //     ),
-        //     // ElevatedButton(onPressed: postData, child: Text('check')),
-        //     ElevatedButton(onPressed: PostNumber, child: Text('continue'))
-        //   ],
+
         // ),
         );
   }
