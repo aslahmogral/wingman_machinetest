@@ -37,7 +37,7 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
             context, MaterialPageRoute(builder: (context) => HomeScreen()));
       } else {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => NewUserScreen()));
+            context, MaterialPageRoute(builder: (context) => NewUserScreen(token: result['jwt'],)));
       }
     } catch (e) {
       print(e);
