@@ -41,7 +41,10 @@ class _NewUserScreenState extends State<NewUserScreen> {
       appBar: AppBar(
         title: Text('Welcome'),
       ),
-      body: Column(
+      body:
+      
+      
+       Column(
         children: [
           Text('welcom looks like your are new here'),
           TextField(
