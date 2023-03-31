@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:wingman_machinetest/components/animation_container.dart';
 import 'package:wingman_machinetest/components/bottom_sheet.dart';
 import 'package:wingman_machinetest/components/button.dart';
@@ -23,7 +22,7 @@ class _NewUserScreenState extends State<NewUserScreen> {
   final emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  postNameAndEmail() async {
+  postNameAndEmail(String name,email,token) async {
     var url = Uri.parse('https://test-otp-api.7474224.xyz/profilesubmit.php');
     Map data = {"name": nameController.text, "email": emailController.text};
     var body = json.encode(data);
@@ -37,12 +36,21 @@ class _NewUserScreenState extends State<NewUserScreen> {
               "Token": widget.token
             },
             body: body);
-        print('responsebody : ${response.body}');
-        var result = json.decode(response.body);
-        print(result);
 
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => HomeScreen(userName: nameController.text,)));
+        if (response.statusCode == 200) {
+          print('responsebody : ${response.body}');
+          var result = json.decode(response.body);
+          print(result);
+
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => HomeScreen(
+                        userName: nameController.text,
+                      )));
+        } else {
+          print('failed');
+        }
       } catch (e) {
         print(e);
       }
@@ -66,7 +74,6 @@ class _NewUserScreenState extends State<NewUserScreen> {
               child: Stack(
                 children: [
                   AnimationContainer(lottie: 'animation/newuser.json'),
-                  
                   Positioned(
                     child: Align(
                       alignment: FractionalOffset.bottomCenter,
@@ -120,7 +127,7 @@ class _NewUserScreenState extends State<NewUserScreen> {
                               ),
                               WButton(
                                 label: 'Submit',
-                                onPressed: postNameAndEmail,
+                                onPressed:()=> postNameAndEmail(nameController.text, emailController.text, widget.token),
                                 gradient: true,
                               )
                             ],

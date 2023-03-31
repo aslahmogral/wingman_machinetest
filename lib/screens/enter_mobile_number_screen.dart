@@ -24,29 +24,35 @@ class _EnterMobileNumberScreenState extends State<EnterMobileNumberScreen> {
   final _formKey = GlobalKey<FormState>();
   String mobileNumber = '';
 
-  PostNumber() async {
+  enterNumber(String mobileNumber) async {
     // print(mobileController.text);
     var url = 'https://test-otp-api.7474224.xyz/sendotp.php';
-    Map data = {"mobile": mobileController.text};
+    Map data = {"mobile": mobileNumber};
     var body = json.encode(data);
     try {
       var response = await http.post(Uri.parse(url),
           headers: {"Content-Type": "application/json"}, body: body);
-      var result = json.decode(response.body);
-      print(result);
-      print(result['request_id']);
-      bool isValidated = _formKey.currentState!.validate();
-      if (isValidated) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => EnterOtpScreen(
-                      returnMobileNumber: (value) {
-                        mobileNumber = value;
-                      },
-                      requestId: result['request_id'],
-                      mobileNumber: mobileController.text,
-                    )));
+
+      if (response.statusCode == 200) {
+        print('passed');
+        var result = json.decode(response.body);
+        print(result);
+        print(result['request_id']);
+        bool isValidated = _formKey.currentState!.validate();
+        if (isValidated) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => EnterOtpScreen(
+                        returnMobileNumber: (value) {
+                          mobileNumber = value;
+                        },
+                        requestId: result['request_id'],
+                        mobileNumber: mobileController.text,
+                      )));
+        }
+      } else {
+        print('failed');
       }
     } catch (e) {
       print(e);
@@ -113,9 +119,8 @@ class _EnterMobileNumberScreenState extends State<EnterMobileNumberScreen> {
                                 WButton(
                                   gradient: true,
                                   label: 'CONTINUE',
-                                  onPressed: PostNumber,
+                                  onPressed: () =>enterNumber(mobileController.text),
                                 ),
-                               
                               ],
                             ),
                           ),

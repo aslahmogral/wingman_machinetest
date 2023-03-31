@@ -34,10 +34,9 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
 
   final _formKey = GlobalKey<FormState>();
 
-
-  postOtp() async {
+  enterOtp(String requestId,otp) async {
     var url = Uri.parse('https://test-otp-api.7474224.xyz/verifyotp.php');
-    Map data = {"request_id": widget.requestId, "code": otpController.text};
+    Map data = {"request_id": requestId, "code": otp};
     var body = json.encode(data);
 
     bool isValidated = _formKey.currentState!.validate();
@@ -46,29 +45,34 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
       try {
         var response = await http.post(url,
             headers: {"Content-Type": "application/json"}, body: body);
-        print('responsebody : ${response.body}');
-        var responseBody = json.decode(response.body);
-        // String invalidOtp = 'invalid otp';
-        // String responseOtp = responseBody['response'];
-        // print('===========');
-        // print(responseBody['response']);
-        // if (responseOtp == invalidOtp) {
-        //   isOtpStatus = true;
-        // }
 
-        profileExist = responseBody['profile_exists'];
-        print('aslah : profile exist $profileExist');
+        if (response.statusCode == 200) {
+          print('responsebody : ${response.body}');
+          var responseBody = json.decode(response.body);
+          // String invalidOtp = 'invalid otp';
+          // String responseOtp = responseBody['response'];
+          // print('===========');
+          // print(responseBody['response']);
+          // if (responseOtp == invalidOtp) {
+          //   isOtpStatus = true;
+          // }
 
-        if (profileExist) {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => HomeScreen()));
+          profileExist = responseBody['profile_exists'];
+          print('aslah : profile exist $profileExist');
+
+          if (profileExist) {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => HomeScreen()));
+          } else {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => NewUserScreen(
+                          token: responseBody['jwt'],
+                        )));
+          }
         } else {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => NewUserScreen(
-                        token: responseBody['jwt'],
-                      )));
+          print('failed');
         }
       } catch (e) {
         print(e);
@@ -149,7 +153,7 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
                               WButton(
                                 gradient: true,
                                 label: 'Verify',
-                                onPressed: postOtp,
+                                onPressed:()=> enterOtp(widget.requestId,otpController.text),
                               ),
                               SizedBox(
                                 height: 12,
