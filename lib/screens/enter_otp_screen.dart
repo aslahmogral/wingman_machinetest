@@ -3,16 +3,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:http/http.dart' as http;
-import 'package:lottie/lottie.dart';
 import 'package:wingman_machinetest/components/animation_container.dart';
 import 'package:wingman_machinetest/components/bottom_sheet.dart';
 import 'package:wingman_machinetest/components/button.dart';
-import 'package:wingman_machinetest/components/textformfield.dart';
-import 'package:wingman_machinetest/screens/enter_mobile_number_screen.dart';
 import 'package:wingman_machinetest/screens/homescreen.dart';
 import 'package:wingman_machinetest/screens/new_user_screen.dart';
 import 'package:wingman_machinetest/utils/apptheme.dart';
 import 'package:wingman_machinetest/utils/colors.dart';
+import 'package:pinput/pinput.dart';
 
 class EnterOtpScreen extends StatefulWidget {
   final String mobileNumber;
@@ -33,7 +31,10 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
   bool isNewUser = false;
   final otpController = TextEditingController();
   bool profileExist = false;
-  bool isOtp = false;
+  bool isOtpCorrect = true;
+
+  final _formKey = GlobalKey<FormState>();
+
   // bool _keyboardVisible = false;
 
   postOtp() async {
@@ -41,29 +42,40 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
     Map data = {"request_id": widget.requestId, "code": otpController.text};
     var body = json.encode(data);
 
-    try {
-      var response = await http.post(url,
-          headers: {"Content-Type": "application/json"}, body: body);
-      print('responsebody : ${response.body}');
-      var result = json.decode(response.body);
-      print(result);
+    bool isValidated = _formKey.currentState!.validate();
 
-      profileExist = result['profile_exists'];
-      print('aslah : profile exist $profileExist');
-      
-      if (profileExist) {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => HomeScreen()));
-      } else {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => NewUserScreen(
-                      token: result['jwt'],
-                    )));
+    if (isValidated) {
+      try {
+        var response = await http.post(url,
+            headers: {"Content-Type": "application/json"}, body: body);
+        print('responsebody : ${response.body}');
+        var responseBody = json.decode(response.body);
+        String invalidOtp = 'invalid otp';
+        String responseOtp = responseBody['response'];
+        print('===========');
+        print(responseBody['response']);
+        if (responseOtp == invalidOtp) {
+          print('++++++++++++++++++++');
+          isOtpCorrect = false;
+        }
+
+        profileExist = responseBody['profile_exists'];
+        print('aslah : profile exist $profileExist');
+
+        if (profileExist) {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => HomeScreen()));
+        } else {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => NewUserScreen(
+                        token: responseBody['jwt'],
+                      )));
+        }
+      } catch (e) {
+        print(e);
       }
-    } catch (e) {
-      print(e);
     }
   }
 
@@ -84,84 +96,84 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
             child: Container(
               child: Stack(
                 children: [
-                  AnimationContainer(lottie:'animation/otp.json' ),
-                  
+                  AnimationContainer(lottie: 'animation/otp.json'),
                   Positioned(
                     child: Align(
                       alignment: FractionalOffset.bottomCenter,
                       child: WBottomSheet(
                           child: SingleChildScrollView(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                            Text(
-                              'Enter OTP',
-                              style: WTheme.primaryHeaderStyle,
-                            ),
-                            SizedBox(
-                              height: 25,
-                            ),
-                            Text('We have sent otp on your number'),
-                            Text('+91-${widget.mobileNumber}'),
-                            SizedBox(
-                              height: 16,
-                            ),
-                            OtpTextField(
-                              
-                              numberOfFields: 6,
-                              fillColor: WColors.brightColor,
-                              filled: true,
-                              keyboardType: TextInputType.number,
-                              borderColor: WColors.primaryColor,
-                              onSubmit: (code) {
-                                otpController.text = code;
-                                print(otpController.text);
-                              },
-                            ),
-                            SizedBox(
-                              height: 40,
-                            ),
-                            WButton(
-                              gradient: true,
-                              label: 'Verify',
-                              onPressed: postOtp,
-                            ),
-                            SizedBox(
-                              height: 12,
-                            ),
-                            WButton(
-                              gradient: false,
-                              textColor: WColors.primaryColor,
-                              buttonColor: WColors.brightColor,
-                              label: 'Retry',
-                              onPressed: () {
-                                widget.returnMobileNumber!(widget.mobileNumber);
-                                Navigator.pop(context);
-                              },
-                            )
-                                                  ],
-                                                ),
-                          )),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Enter OTP',
+                                style: WTheme.primaryHeaderStyle,
+                              ),
+                              SizedBox(
+                                height: 25,
+                              ),
+                              Text('We have sent otp on your number'),
+                              Text('+91-${widget.mobileNumber}'),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              Pinput(
+                                validator: (code) {
+                                  if (code!.isEmpty) {
+                                    return 'plz enter code to continue';
+                                  } else if (isOtpCorrect == false) {
+                                    return 'entered otp is wrong';
+                                  }
+                                  return null;
+                                },
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                controller: otpController,
+                                length: 6,
+                                defaultPinTheme: PinTheme(
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                            color: WColors.primaryColor))),
+                              ),
+                              SizedBox(
+                                height: 40,
+                              ),
+                              WButton(
+                                gradient: true,
+                                label: 'Verify',
+                                onPressed: postOtp,
+                              ),
+                              SizedBox(
+                                height: 12,
+                              ),
+                              WButton(
+                                gradient: false,
+                                textColor: WColors.primaryColor,
+                                buttonColor: WColors.brightColor,
+                                label: 'Retry',
+                                onPressed: () {
+                                  widget
+                                      .returnMobileNumber!(widget.mobileNumber);
+                                  Navigator.pop(context);
+                                },
+                              )
+                            ],
+                          ),
+                        ),
+                      )),
                     ),
                   )
                 ],
               ),
             ),
-          )
-
-          // Container(
-          //   color: WColors.primaryColor,
-          //   child: Column(children: [
-          //     Text('req id : ${widget.requestId}'),
-          //     Text('enter otp'),
-          //     TextField(
-          //       controller: otpController,
-          //       decoration: InputDecoration(hintText: 'Enter Otp'),
-          //     ),
-          //     ElevatedButton(onPressed: postOtp, child: Text('verify otp'))
-          //   ]),
-          // ),
-          ),
+          )),
     );
   }
 }
