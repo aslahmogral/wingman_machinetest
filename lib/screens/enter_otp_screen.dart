@@ -30,11 +30,10 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
   bool isNewUser = false;
   final otpController = TextEditingController();
   bool profileExist = false;
-  bool isOtpCorrect = true;
+  bool? isOtpStatus;
 
   final _formKey = GlobalKey<FormState>();
 
-  // bool _keyboardVisible = false;
 
   postOtp() async {
     var url = Uri.parse('https://test-otp-api.7474224.xyz/verifyotp.php');
@@ -49,14 +48,13 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
             headers: {"Content-Type": "application/json"}, body: body);
         print('responsebody : ${response.body}');
         var responseBody = json.decode(response.body);
-        String invalidOtp = 'invalid otp';
-        String responseOtp = responseBody['response'];
-        print('===========');
-        print(responseBody['response']);
-        if (responseOtp == invalidOtp) {
-          print('++++++++++++++++++++');
-          isOtpCorrect = false;
-        }
+        // String invalidOtp = 'invalid otp';
+        // String responseOtp = responseBody['response'];
+        // print('===========');
+        // print(responseBody['response']);
+        // if (responseOtp == invalidOtp) {
+        //   isOtpStatus = true;
+        // }
 
         profileExist = responseBody['profile_exists'];
         print('aslah : profile exist $profileExist');
@@ -95,7 +93,11 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
             child: Container(
               child: Stack(
                 children: [
-                  AnimationContainer(lottie: 'animation/otp.json'),
+                  InkWell(
+                      onTap: () {
+                        print(isOtpStatus);
+                      },
+                      child: AnimationContainer(lottie: 'animation/otp.json')),
                   Positioned(
                     child: Align(
                       alignment: FractionalOffset.bottomCenter,
@@ -122,7 +124,7 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
                                 validator: (code) {
                                   if (code!.isEmpty) {
                                     return 'plz enter code to continue';
-                                  } else if (isOtpCorrect == false) {
+                                  } else if (isOtpStatus == true) {
                                     return 'entered otp is wrong';
                                   }
                                   return null;
