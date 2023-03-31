@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
 import 'package:wingman_machinetest/components/bottom_sheet.dart';
@@ -23,7 +24,6 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
   final otpController = TextEditingController();
   bool profileExist = false;
   bool _keyboardVisible = false;
-
 
   postOtp() async {
     var url = Uri.parse('https://test-otp-api.7474224.xyz/verifyotp.php');
@@ -70,16 +70,15 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
           child: Column(
             children: [
               Expanded(
-                  child:_keyboardVisible ? SizedBox() : Container(
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                    Lottie.asset('animation/otp.json')
-                    ],
-                  )
-                ),
-              )),
+                  child: _keyboardVisible
+                      ? SizedBox()
+                      : Container(
+                          child: Center(
+                              child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [Lottie.asset('animation/otp.json')],
+                          )),
+                        )),
               WBottomSheet(
                   child: Column(
                 children: [
@@ -87,12 +86,23 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
                   SizedBox(
                     height: 16,
                   ),
-                  WTextFormField(
-                      label: 'Enter Otp',
-                      textEditingController: otpController,
-                      textInputType: TextInputType.number),
+                  OtpTextField(
+                    numberOfFields: 6,
+                    fillColor: WColors.brightColor,
+                    filled: true,
+                    keyboardType: TextInputType.number,
+                    borderColor: WColors.primaryColor,
+                    onSubmit: (code) {
+                      otpController.text = code;
+                      print(otpController.text);
+                    },
+                  ),
+                  // WTextFormField(
+                  //     label: 'Enter Otp',
+                  //     textEditingController: otpController,
+                  //     textInputType: TextInputType.number),
                   SizedBox(
-                    height: 16,
+                    height: 30,
                   ),
                   WButton(
                     label: 'Verify',
