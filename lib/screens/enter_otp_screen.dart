@@ -7,6 +7,7 @@ import 'package:lottie/lottie.dart';
 import 'package:wingman_machinetest/components/bottom_sheet.dart';
 import 'package:wingman_machinetest/components/button.dart';
 import 'package:wingman_machinetest/components/textformfield.dart';
+import 'package:wingman_machinetest/screens/enter_mobile_number_screen.dart';
 import 'package:wingman_machinetest/screens/homescreen.dart';
 import 'package:wingman_machinetest/screens/new_user_screen.dart';
 import 'package:wingman_machinetest/utils/apptheme.dart';
@@ -15,7 +16,13 @@ import 'package:wingman_machinetest/utils/colors.dart';
 class EnterOtpScreen extends StatefulWidget {
   final String mobileNumber;
   final String requestId;
-  const EnterOtpScreen({super.key, required this.requestId, required this.mobileNumber});
+  final Function? returnMobileNumber;
+
+  const EnterOtpScreen(
+      {super.key,
+      required this.requestId,
+      required this.mobileNumber,
+      this.returnMobileNumber});
 
   @override
   State<EnterOtpScreen> createState() => _EnterOtpScreenState();
@@ -25,7 +32,7 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
   bool isNewUser = false;
   final otpController = TextEditingController();
   bool profileExist = false;
-  bool _keyboardVisible = false;
+  // bool _keyboardVisible = false;
 
   postOtp() async {
     var url = Uri.parse('https://test-otp-api.7474224.xyz/verifyotp.php');
@@ -59,74 +66,86 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _keyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
 
     return Scaffold(
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           elevation: 0.0,
           backgroundColor: WColors.primaryColor,
           title: Text('Enter Verification Code'),
         ),
-        body: Container(
-          color: WColors.primaryColor,
-          child: Column(
-            children: [
-              Expanded(
-                  child: _keyboardVisible
-                      ? SizedBox()
-                      : Container(
-                          child: Center(
+        body: GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
+          child: Container(
+            color: WColors.primaryColor,
+            child: Column(
+              children: [
+                Expanded(
+                    child:
+                   
+                        Container(
+                            child: Center(
+                                child: SingleChildScrollView(
                               child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Lottie.asset('animation/otp.json',
-                                  fit: BoxFit.fitHeight, height: 300)
-                            ],
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Lottie.asset('animation/otp.json',
+                                      fit: BoxFit.fitHeight, height: 300)
+                                ],
+                              ),
+                            )),
                           )),
-                        )),
-              WBottomSheet(
-                  child: Column(
-                children: [
-                  Text(
-                    'Enter OTP',
-                    style: WTheme.primaryHeaderStyle,
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Text('We have sent otp on your number'),
-                  Text('+91-${widget.mobileNumber}'),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  OtpTextField(
-                    numberOfFields: 6,
-                    fillColor: WColors.brightColor,
-                    filled: true,
-                    keyboardType: TextInputType.number,
-                    borderColor: WColors.primaryColor,
-                    onSubmit: (code) {
-                      otpController.text = code;
-                      print(otpController.text);
-                    },
-                  ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  WButton(
-                    label: 'Verify',
-                    onPressed: postOtp,
-                  ),
-                  
-                  SizedBox(height: 16,), WButton(
-                    textColor: WColors.primaryColor,
-                    buttonColor: WColors.brightColor,
-                    label: 'Retry',
-                    onPressed: postOtp,
-                  )
-                ],
-              ))
-            ],
+                WBottomSheet(
+                    child: Column(
+                  children: [
+                    Text(
+                      'Enter OTP',
+                      style: WTheme.primaryHeaderStyle,
+                    ),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    Text('We have sent otp on your number'),
+                    Text('+91-${widget.mobileNumber}'),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    OtpTextField(
+                      numberOfFields: 6,
+                      fillColor: WColors.brightColor,
+                      filled: true,
+                      keyboardType: TextInputType.number,
+                      borderColor: WColors.primaryColor,
+                      onSubmit: (code) {
+                        otpController.text = code;
+                        print(otpController.text);
+                      },
+                    ),
+                    SizedBox(
+                      height: 40,
+                    ),
+                    WButton(
+                      gradient: true,
+                      label: 'Verify',
+                      onPressed: postOtp,
+                    ),
+                    SizedBox(
+                      height: 12,
+                    ),
+                    WButton(
+                      gradient: false,
+                      textColor: WColors.primaryColor,
+                      buttonColor: WColors.brightColor,
+                      label: 'Retry',
+                      onPressed: () {
+                        widget.returnMobileNumber!(widget.mobileNumber);
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                ))
+              ],
+            ),
           ),
         )
 

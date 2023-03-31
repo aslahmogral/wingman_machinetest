@@ -7,6 +7,7 @@ import 'package:wingman_machinetest/components/button.dart';
 import 'package:wingman_machinetest/components/textformfield.dart';
 import 'package:wingman_machinetest/screens/homescreen.dart';
 import 'package:http/http.dart' as http;
+import 'package:wingman_machinetest/utils/apptheme.dart';
 import 'package:wingman_machinetest/utils/colors.dart';
 
 class NewUserScreen extends StatefulWidget {
@@ -20,7 +21,6 @@ class NewUserScreen extends StatefulWidget {
 class _NewUserScreenState extends State<NewUserScreen> {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
- bool _keyboardVisible = false;
 
 
   postNameAndEmail() async {
@@ -45,7 +45,6 @@ class _NewUserScreenState extends State<NewUserScreen> {
   @override
   Widget build(BuildContext context) {
 
-    _keyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
 
     return Scaffold(
         appBar: AppBar(
@@ -53,71 +52,57 @@ class _NewUserScreenState extends State<NewUserScreen> {
           backgroundColor: WColors.primaryColor,
           title: Text('Enter Verification Code'),
         ),
-        body: Container(
-          color: WColors.primaryColor,
-          child: Column(
-            children: [
-              Expanded(
-                  child:_keyboardVisible ? SizedBox() : Container(
-                child: Center(
-                    child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Lottie.asset('animation/newuser.json',
-                        fit: BoxFit.contain, height: 300)
-                  ],
+        body: GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
+          child: Container(
+            color: WColors.primaryColor,
+            child: Column(
+              children: [
+                Expanded(
+                    child: Container(
+                  child: Center(
+                      child: SingleChildScrollView(
+                        child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                        Lottie.asset('animation/newuser.json',
+                            fit: BoxFit.contain, height: 300)
+                                        ],
+                                      ),
+                      )),
                 )),
-              )),
-              WBottomSheet(
-                  child: Column(
-                children: [
-                  Text('Welcom Back'),
-                  Text('Enter your details below'),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  WTextFormField(
-                    textEditingController: nameController,
-                    label: 'Enter Name',
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  WTextFormField(
-                    textEditingController: emailController,
-                    label: 'Enter Email',
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  WButton(label: 'Submit',onPressed: postNameAndEmail,)
-                ],
-              ))
-            ],
+                WBottomSheet(
+                    child: Column(
+                  children: [
+                    Text('Welcome Back',style: WTheme.primaryHeaderStyle2,),
+                    SizedBox(height: 16,),
+                    Text('Enter your details below'),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    WTextFormField(
+                      textEditingController: nameController,
+                      label: 'Enter Name',
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    WTextFormField(
+                      textEditingController: emailController,
+                      label: 'Enter Email',
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    WButton(label: 'Submit',onPressed: postNameAndEmail,gradient: true,)
+                  ],
+                ))
+              ],
+            ),
           ),
         )
 
-        // appBar: AppBar(
-        //     elevation: 0.0,
-        //   backgroundColor: WColors.primaryColor,
-        //   title: Text('Welcome'),
-        // ),
-        // body:
-
-        //  Column(
-        //   children: [
-        //     Text('welcom looks like your are new here'),
-        //     TextField(
-        //       controller: nameController,
-        //       decoration: InputDecoration(hintText: 'Enter Name'),
-        //     ),
-        //     TextField(
-        //       controller: emailController,
-        //       decoration: InputDecoration(hintText: 'Enter Email'),
-        //     ),
-        //     ElevatedButton(onPressed: postNameAndEmail, child: Text('submit'))
-        //   ],
-        // ),
+      
         );
   }
 }
