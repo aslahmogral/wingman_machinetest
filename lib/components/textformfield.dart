@@ -5,12 +5,14 @@ class WTextFormField extends StatefulWidget {
   final TextEditingController? textEditingController;
   final String? label;
   final String? hintText;
+  final FormFieldValidator<String>? validator;
   final TextInputType? textInputType;
   const WTextFormField(
       {super.key,
-       this.textEditingController,
-       this.label,
-       this.hintText,  this.textInputType});
+      this.textEditingController,
+      this.label,
+      this.hintText,
+      this.textInputType, this.validator});
 
   @override
   State<WTextFormField> createState() => _WTextFormFieldState();
@@ -22,7 +24,9 @@ class _WTextFormFieldState extends State<WTextFormField> {
     return TextFormField(
       keyboardType: widget.textInputType,
       controller: widget.textEditingController,
+      validator: widget.validator,
       decoration: InputDecoration(
+        
           fillColor: WColors.brightColor,
           filled: true,
           label: Text(

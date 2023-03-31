@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:wingman_machinetest/components/animation_container.dart';
 import 'package:wingman_machinetest/components/bottom_sheet.dart';
 import 'package:wingman_machinetest/components/button.dart';
 import 'package:wingman_machinetest/components/textformfield.dart';
@@ -34,16 +35,19 @@ class _EnterMobileNumberScreenState extends State<EnterMobileNumberScreen> {
       var result = json.decode(response.body);
       print(result);
       print(result['request_id']);
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => EnterOtpScreen(
-                    returnMobileNumber: (value) {
-                      mobileNumber = value;
-                    },
-                    requestId: result['request_id'],
-                    mobileNumber: mobileController.text,
-                  )));
+      bool isValidated = _formKey.currentState!.validate();
+      if (isValidated) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => EnterOtpScreen(
+                      returnMobileNumber: (value) {
+                        mobileNumber = value;
+                      },
+                      requestId: result['request_id'],
+                      mobileNumber: mobileController.text,
+                    )));
+      }
     } catch (e) {
       print(e);
     }
@@ -51,89 +55,92 @@ class _EnterMobileNumberScreenState extends State<EnterMobileNumberScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: GestureDetector(
-          onTap: () => FocusManager.instance.primaryFocus!.unfocus(), 
-          child: Container(
-            decoration: BoxDecoration(gradient: WTheme.primaryGradient),
-            
-              // color: WColors.primaryColor,
-              child: Column(
-          children: [
-            Expanded(
-              child: Container(
-                child: Center(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Column(
-                                children: [
-                                  Lottie.asset(
-                                    'animation/mobilenumber.json',
-                                    // height: 300
-                                  )
-                                ],
-                              ),
-                      ],
+    return Container(
+      decoration: BoxDecoration(gradient: WTheme.primaryGradient),
+      child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            elevation: 0.0,
+            backgroundColor: Colors.transparent,
+          ),
+          body: GestureDetector(
+            onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
+            child: Container(
+              child: Stack(
+                children: [
+                  AnimationContainer(lottie: 'animation/mobilenumber.json'),
+                  Positioned(
+                    child: Align(
+                      alignment: FractionalOffset.bottomCenter,
+                      child: WBottomSheet(
+                        child: Form(
+                          key: _formKey,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'Enter Your Phone Number',
+                                  style: WTheme.primaryHeaderStyle,
+                                ),
+                                SizedBox(
+                                  height: 30,
+                                ),
+                                WTextFormField(
+                                  hintText: '+91 India',
+                                  label: 'Enter Mobile Number',
+                                  textEditingController: mobileController,
+                                  textInputType: TextInputType.phone,
+                                  validator: (value) {
+                                    return regExpMobileNumber(value);
+                                  },
+                                ),
+                                SizedBox(
+                                  height: 30,
+                                ),
+                                Text(
+                                    'We will send you one time \n\t\t\t\t\t\t\t password (OTP)'),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  'Carrier rates may apply',
+                                  style: TextStyle(color: WColors.primaryColor),
+                                ),
+                                SizedBox(
+                                  height: 30,
+                                ),
+                                WButton(
+                                  gradient: true,
+                                  label: 'CONTINUE',
+                                  onPressed: PostNumber,
+                                ),
+                               
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                  )
+                ],
               ),
             ),
-            WBottomSheet(
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                   
-                    Text(
-                      'Enter Your Phone Number',
-                      style: WTheme.primaryHeaderStyle,
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    WTextFormField(
-                      hintText: '+91 India',
-                      label: 'Enter Mobile Number',
-                      textEditingController: mobileController,
-                      textInputType: TextInputType.phone,
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Text(
-                        'We will send you one time \n\t\t\t\t\t\t\t password (OTP)'),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      'Carrier rates may apply',
-                      style: TextStyle(color: WColors.primaryColor),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    WButton(
-                      gradient: true,
-                      label: 'CONTINUE',
-                      onPressed: PostNumber,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    )
-                  ],
-                ),
-              ),
-            )
-          ],
-              ),
-            ),
-        )
+          )
 
-        // ),
-        );
+          // ),
+          ),
+    );
+  }
+
+  String? regExpMobileNumber(String? value) {
+    if (value!.isEmpty) {
+      return 'Mobile number is empty';
+    } else if (!RegExp(
+            r'^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$')
+        .hasMatch(value)) {
+      return 'invalid mobile number';
+    }
+    return null;
   }
 }
