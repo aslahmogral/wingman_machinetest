@@ -9,11 +9,13 @@ import 'package:wingman_machinetest/components/button.dart';
 import 'package:wingman_machinetest/components/textformfield.dart';
 import 'package:wingman_machinetest/screens/homescreen.dart';
 import 'package:wingman_machinetest/screens/new_user_screen.dart';
+import 'package:wingman_machinetest/utils/apptheme.dart';
 import 'package:wingman_machinetest/utils/colors.dart';
 
 class EnterOtpScreen extends StatefulWidget {
+  final String mobileNumber;
   final String requestId;
-  const EnterOtpScreen({super.key, required this.requestId});
+  const EnterOtpScreen({super.key, required this.requestId, required this.mobileNumber});
 
   @override
   State<EnterOtpScreen> createState() => _EnterOtpScreenState();
@@ -76,13 +78,24 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
                           child: Center(
                               child: Column(
                             mainAxisSize: MainAxisSize.min,
-                            children: [Lottie.asset('animation/otp.json')],
+                            children: [
+                              Lottie.asset('animation/otp.json',
+                                  fit: BoxFit.fitHeight, height: 300)
+                            ],
                           )),
                         )),
               WBottomSheet(
                   child: Column(
                 children: [
+                  Text(
+                    'Enter OTP',
+                    style: WTheme.primaryHeaderStyle,
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
                   Text('We have sent otp on your number'),
+                  Text('+91-${widget.mobileNumber}'),
                   SizedBox(
                     height: 16,
                   ),
@@ -97,15 +110,18 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
                       print(otpController.text);
                     },
                   ),
-                  // WTextFormField(
-                  //     label: 'Enter Otp',
-                  //     textEditingController: otpController,
-                  //     textInputType: TextInputType.number),
                   SizedBox(
-                    height: 30,
+                    height: 50,
                   ),
                   WButton(
                     label: 'Verify',
+                    onPressed: postOtp,
+                  ),
+                  
+                  SizedBox(height: 16,), WButton(
+                    textColor: WColors.primaryColor,
+                    buttonColor: WColors.brightColor,
+                    label: 'Retry',
                     onPressed: postOtp,
                   )
                 ],

@@ -6,6 +6,7 @@ import 'package:wingman_machinetest/components/button.dart';
 import 'package:wingman_machinetest/components/textformfield.dart';
 import 'package:wingman_machinetest/screens/enter_otp_screen.dart';
 import 'package:http/http.dart' as http;
+import 'package:wingman_machinetest/utils/apptheme.dart';
 import 'package:wingman_machinetest/utils/colors.dart';
 import 'package:wingman_machinetest/utils/dimens.dart';
 import 'package:lottie/lottie.dart';
@@ -38,7 +39,7 @@ class _EnterMobileNumberScreenState extends State<EnterMobileNumberScreen> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => EnterOtpScreen(
+              builder: (context) => EnterOtpScreen(mobileNumber: mobileController.text,
                     requestId: result['request_id'],
                   )));
     } catch (e) {
@@ -64,11 +65,9 @@ class _EnterMobileNumberScreenState extends State<EnterMobileNumberScreen> {
                         ? SizedBox()
                         : Column(
                             children: [
-                              Text('OTP Verification'),
-                              SizedBox(
-                                height: Dimens.padding,
-                              ),
-                              Lottie.asset('animation/mobilenumber.json',fit: BoxFit.cover,height: 300)
+                              
+                              
+                              Lottie.asset('animation/mobilenumber.json',)
                             ],
                           ),
                   ],
@@ -82,28 +81,29 @@ class _EnterMobileNumberScreenState extends State<EnterMobileNumberScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  Text('Enter Your Phone Number',style: WTheme.primaryHeaderStyle,),
                   SizedBox(
-                    height: Dimens.padding,
+                    height:30,
                   ),
                   WTextFormField(
-                    hintText: '+91',
+                    hintText: '+91 India',
                     label: 'Enter Mobile Number',
                     textEditingController: mobileController,
                     textInputType: TextInputType.phone,
                   ),
                   SizedBox(
-                    height: Dimens.padding,
+                    height:30,
                   ),
-                  Text('We will send you one time password (OTP)'),
+                  Text('We will send you one time \n\t\t\t\t\t\t\t password (OTP)'),
                   SizedBox(
-                    height: Dimens.padding,
+                    height: 10,
                   ),
-                  Text('Carrier rates may apply'),
+                  Text('Carrier rates may apply',style: TextStyle(color: WColors.primaryColor),),
                   SizedBox(
-                    height: Dimens.padding,
+                    height: 30,
                   ),
                   WButton(
-                    label: 'Continue',
+                    label: 'CONTINUE',
                     onPressed: PostNumber,
                   ),
                   SizedBox(height: 40,)
