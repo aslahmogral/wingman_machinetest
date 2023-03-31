@@ -1,12 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:wingman_machinetest/components/bottom_sheet.dart';
 import 'package:wingman_machinetest/components/button.dart';
 import 'package:wingman_machinetest/components/textformfield.dart';
 import 'package:wingman_machinetest/screens/enter_otp_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:wingman_machinetest/utils/colors.dart';
 import 'package:wingman_machinetest/utils/dimens.dart';
+import 'package:lottie/lottie.dart';
 
 class EnterMobileNumberScreen extends StatefulWidget {
   const EnterMobileNumberScreen({super.key});
@@ -47,7 +49,6 @@ class _EnterMobileNumberScreenState extends State<EnterMobileNumberScreen> {
   @override
   Widget build(BuildContext context) {
     _keyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
-    print(_keyboardVisible);
     return Scaffold(
         body: Container(
       color: WColors.primaryColor,
@@ -67,14 +68,7 @@ class _EnterMobileNumberScreenState extends State<EnterMobileNumberScreen> {
                               SizedBox(
                                 height: Dimens.padding,
                               ),
-                              InkWell(
-                                onTap: () => print(_keyboardVisible),
-                                child: Container(
-                                  height: 200,
-                                  width: 200,
-                                  color: Colors.white,
-                                ),
-                              )
+                              Lottie.asset('animation/mobilenumber.json',fit: BoxFit.cover,height: 300)
                             ],
                           ),
                   ],
@@ -82,48 +76,38 @@ class _EnterMobileNumberScreenState extends State<EnterMobileNumberScreen> {
               ),
             ),
           ),
-          Container(
-            decoration: BoxDecoration(
-                // color: WColors.primaryColor,
-                color: WColors.dimWhiteColor,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20))),
-            width: MediaQuery.of(context).size.width,
-            // color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(Dimens.padding_large),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      height: Dimens.padding,
-                    ),
-                    WTextFormField(
-                      hintText: '+91',
-                      label: 'Enter Mobile Number',
-                      textEditingController: mobileController,
-                      textInputType: TextInputType.phone,
-                    ),
-                    SizedBox(
-                      height: Dimens.padding,
-                    ),
-                    Text('We will send you one time password (OTP)'),
-                    SizedBox(
-                      height: Dimens.padding,
-                    ),
-                    Text('Carrier rates may apply'),
-                    SizedBox(
-                      height: Dimens.padding,
-                    ),
-                    WButton(
-                      label: 'Continue',
-                      onPressed: PostNumber,
-                    ),
-                  ],
-                ),
+          WBottomSheet(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    height: Dimens.padding,
+                  ),
+                  WTextFormField(
+                    hintText: '+91',
+                    label: 'Enter Mobile Number',
+                    textEditingController: mobileController,
+                    textInputType: TextInputType.phone,
+                  ),
+                  SizedBox(
+                    height: Dimens.padding,
+                  ),
+                  Text('We will send you one time password (OTP)'),
+                  SizedBox(
+                    height: Dimens.padding,
+                  ),
+                  Text('Carrier rates may apply'),
+                  SizedBox(
+                    height: Dimens.padding,
+                  ),
+                  WButton(
+                    label: 'Continue',
+                    onPressed: PostNumber,
+                  ),
+                  SizedBox(height: 40,)
+                ],
               ),
             ),
           )
