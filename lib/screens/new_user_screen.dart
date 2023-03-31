@@ -42,7 +42,7 @@ class _NewUserScreenState extends State<NewUserScreen> {
         print(result);
 
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => HomeScreen()));
+            context, MaterialPageRoute(builder: (context) => HomeScreen(userName: nameController.text,)));
       } catch (e) {
         print(e);
       }
