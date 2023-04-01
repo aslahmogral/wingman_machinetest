@@ -1,6 +1,7 @@
 import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wingman_machinetest/components/animation_container.dart';
 import 'package:wingman_machinetest/components/bottom_sheet.dart';
 import 'package:wingman_machinetest/components/button.dart';
@@ -22,10 +23,14 @@ class _ProfileSubmitScreenState extends State<ProfileSubmitScreen> {
   final emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
+  saveLogginInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('user', nameController.text);
+  }
+
   postNameAndEmail(String name, email, token) async {
     bool isValidated = _formKey.currentState!.validate();
     final tokenr = await Provider.of<OtpProvider>(context, listen: false).token;
-   
 
     if (isValidated) {
       try {
@@ -34,11 +39,13 @@ class _ProfileSubmitScreenState extends State<ProfileSubmitScreen> {
 
         if (!response.success!) {
         } else {
-          Navigator.push(
+          saveLogginInfo();
+          Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                   builder: (context) => HomeScreen(
                         userName: nameController.text,
+                        
                       )));
         }
       } catch (e) {
@@ -46,8 +53,6 @@ class _ProfileSubmitScreenState extends State<ProfileSubmitScreen> {
       }
     }
   }
-
-  
 
   @override
   Widget build(BuildContext context) {

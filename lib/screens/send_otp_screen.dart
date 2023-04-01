@@ -53,8 +53,10 @@ class _SendOtpScreenState extends State<SendOtpScreen> {
     return Container(
       decoration: BoxDecoration(gradient: WTheme.primaryGradient),
       child: Scaffold(
+        
           backgroundColor: Colors.transparent,
           appBar: AppBar(
+            automaticallyImplyLeading: false,
             elevation: 0.0,
             backgroundColor: Colors.transparent,
           ),

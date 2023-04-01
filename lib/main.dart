@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wingman_machinetest/provider/otp_provider.dart';
-import 'package:wingman_machinetest/screens/send_otp_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:wingman_machinetest/screens/spashscreen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<OtpProvider>(create: (_) => OtpProvider())
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Wingman',
         theme: ThemeData(
           fontFamily: GoogleFonts.poppins().fontFamily,
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
             primary: const Color(0xff9170e2),
           ),
         ),
-        home: const SendOtpScreen(),
+        home: const SplashScreen(),
       ),
     );
   }

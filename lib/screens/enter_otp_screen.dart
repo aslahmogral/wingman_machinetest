@@ -1,5 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wingman_machinetest/components/animation_container.dart';
 import 'package:wingman_machinetest/components/bottom_sheet.dart';
 import 'package:wingman_machinetest/components/button.dart';
@@ -32,6 +33,11 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
 
   final _formKey = GlobalKey<FormState>();
 
+  saveLogginInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('user', 'user');
+  }
+
   verifyOtp() async {
     bool isValidated = _formKey.currentState!.validate();
     if (isValidated) {
@@ -52,7 +58,9 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
               Provider.of<OtpProvider>(context, listen: false).profileExist;
 
           if (profileExist) {
-            Navigator.push(
+            saveLogginInfo();
+
+            Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (context) => HomeScreen()));
           } else {
             var token = Provider.of<OtpProvider>(context, listen: false).token;
@@ -67,25 +75,32 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
           showDialog(
               context: context,
               builder: (_) => AlertDialog(
-                    title: Text('Something Went Wrong',style: TextStyle(fontWeight: FontWeight.bold),),
-                    content: Column(mainAxisSize: MainAxisSize.min, children: [
-                      Text('The Otp you have entered'),
-                      Text(otpController.text),
-                      Text('Might be wrong'),
-                      SizedBox(height:12,),
-                      WButton(label: 'Close', gradient: true,onPressed: () => Navigator.pop(context),)
-                    ],),
+                    title: Text(
+                      'Something Went Wrong',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text('The Otp you have entered'),
+                        Text(otpController.text),
+                        Text('Might be wrong'),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        WButton(
+                          label: 'Close',
+                          gradient: true,
+                          onPressed: () => Navigator.pop(context),
+                        )
+                      ],
+                    ),
                   ));
         }
       }
     }
   }
-// @override
-//   void initState() {
-//     isOtpStatus =  Provider.of<OtpProvider>(context, listen: false).otpStatus;
 
-//     super.initState();
-//   }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -132,10 +147,6 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
                               ),
                               Pinput(
                                 validator: (code) {
-                                  // bool otpstatus = Provider.of<OtpProvider>(
-                                  //         context,
-                                  //         listen: false)
-                                  //     .otpStatus;
                                   if (code!.isEmpty) {
                                     return 'plz enter code to continue';
                                   }
