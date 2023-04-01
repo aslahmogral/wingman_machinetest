@@ -8,6 +8,8 @@ import 'package:wingman_machinetest/provider/otp_provider.dart';
 import 'package:wingman_machinetest/screens/enter_otp_screen.dart';
 import 'package:wingman_machinetest/utils/apptheme.dart';
 import 'package:wingman_machinetest/utils/colors.dart';
+import 'package:wingman_machinetest/utils/constants.dart';
+import 'package:wingman_machinetest/utils/dimens.dart';
 
 class SendOtpScreen extends StatefulWidget {
   const SendOtpScreen({super.key});
@@ -28,9 +30,7 @@ class _SendOtpScreenState extends State<SendOtpScreen> {
           .sendOtp(mobileNumber: mobileController.text);
       print(response);
       if (!response.success!) {
-        print('aslah : sendotp :error');
       } else {
-        print('aslah : sendotp :success');
         String requestId =
             Provider.of<OtpProvider>(context, listen: false).requestId;
 
@@ -53,7 +53,6 @@ class _SendOtpScreenState extends State<SendOtpScreen> {
     return Container(
       decoration: BoxDecoration(gradient: WTheme.primaryGradient),
       child: Scaffold(
-        
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             automaticallyImplyLeading: false,
@@ -77,15 +76,15 @@ class _SendOtpScreenState extends State<SendOtpScreen> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  'Enter Your Phone Number',
+                                  Constants.enter_number,
                                   style: WTheme.primaryHeaderStyle,
                                 ),
                                 SizedBox(
-                                  height: 30,
+                                  height: Dimens.padding_xxl,
                                 ),
                                 WTextFormField(
-                                  hintText: '+91 India',
-                                  label: 'Enter Mobile Number',
+                                  hintText: Constants.india_code,
+                                  label: Constants.enter_number,
                                   textEditingController: mobileController,
                                   textInputType: TextInputType.phone,
                                   validator: (value) {
@@ -93,23 +92,22 @@ class _SendOtpScreenState extends State<SendOtpScreen> {
                                   },
                                 ),
                                 SizedBox(
-                                  height: 30,
+                                  height: Dimens.padding_xxl,
                                 ),
-                                Text(
-                                    'We will send you one time \n\t\t\t\t\t\t\t password (OTP)'),
+                                Text(Constants.we_will_send_otp),
                                 SizedBox(
-                                  height: 10,
+                                  height: Dimens.Padding_xs,
                                 ),
                                 Text(
-                                  'Carrier rates may apply',
+                                  Constants.carrier_rate,
                                   style: TextStyle(color: WColors.primaryColor),
                                 ),
                                 SizedBox(
-                                  height: 30,
+                                  height: Dimens.padding_xxl,
                                 ),
                                 WButton(
                                   gradient: true,
-                                  label: 'CONTINUE',
+                                  label: Constants.continuee,
                                   onPressed: () => sendOtp(),
                                 ),
                               ],
@@ -131,11 +129,11 @@ class _SendOtpScreenState extends State<SendOtpScreen> {
 
   String? regExpMobileNumber(String? value) {
     if (value!.isEmpty) {
-      return 'Mobile number is empty';
+      return Constants.mobile_empty_validator;
     } else if (!RegExp(
             r'^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$')
         .hasMatch(value)) {
-      return 'invalid mobile number';
+      return Constants.mobile_empty_validator;
     }
     return null;
   }

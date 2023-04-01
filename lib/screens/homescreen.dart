@@ -8,6 +8,7 @@ import 'package:wingman_machinetest/components/button.dart';
 import 'package:wingman_machinetest/screens/send_otp_screen.dart';
 import 'package:wingman_machinetest/utils/apptheme.dart';
 import 'package:wingman_machinetest/utils/constants.dart';
+import 'package:wingman_machinetest/utils/dimens.dart';
 
 class HomeScreen extends StatefulWidget {
   final String? userName;
@@ -84,9 +85,9 @@ class _HomeScreenState extends State<HomeScreen> {
               content: Container(
                 decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(20)),
+                    borderRadius: BorderRadius.circular(Dimens.borderRadius_small)),
                 child: Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(Dimens.borderRadius_small),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -94,25 +95,25 @@ class _HomeScreenState extends State<HomeScreen> {
                           onTap: () async {
                             final SharedPreferences pref =
                                 await SharedPreferences.getInstance();
-                            pref.remove('user');
+                            pref.remove(Constants.sharedpreference_key);
                             Navigator.pop(context);
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => SendOtpScreen()));
                           },
-                          child: Text('Logout')),
+                          child: Text(Constants.logout)),
                       Divider(),
                       SizedBox(
-                        height: 12,
+                        height: Dimens.Padding_small,
                       ),
-                      InkWell(onTap: () => exit(0), child: Text('Exit ')),
+                      InkWell(onTap: () => exit(0), child: Text(Constants.exit)),
                       Divider(),
                       SizedBox(
-                        height: 12,
+                        height: Dimens.Padding_small,
                       ),
                       WButton(
-                        label: 'Cancel',
+                        label: Constants.cancel,
                         gradient: true,
                         onPressed: () => Navigator.pop(context),
                       )

@@ -9,6 +9,8 @@ import 'package:wingman_machinetest/components/textformfield.dart';
 import 'package:wingman_machinetest/provider/otp_provider.dart';
 import 'package:wingman_machinetest/screens/homescreen.dart';
 import 'package:wingman_machinetest/utils/apptheme.dart';
+import 'package:wingman_machinetest/utils/constants.dart';
+import 'package:wingman_machinetest/utils/dimens.dart';
 
 class ProfileSubmitScreen extends StatefulWidget {
   final String token;
@@ -25,7 +27,7 @@ class _ProfileSubmitScreenState extends State<ProfileSubmitScreen> {
 
   saveLogginInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('user', nameController.text);
+    prefs.setString(Constants.sharedpreference_key, nameController.text);
   }
 
   postNameAndEmail(String name, email, token) async {
@@ -63,7 +65,7 @@ class _ProfileSubmitScreenState extends State<ProfileSubmitScreen> {
           appBar: AppBar(
             elevation: 0.0,
             backgroundColor: Colors.transparent,
-            title: Text('Enter Your Name and Email'),
+            title: Text(Constants.enter_name_email),
           ),
           body: GestureDetector(
             onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
@@ -82,48 +84,38 @@ class _ProfileSubmitScreenState extends State<ProfileSubmitScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                'Welcome Back',
+                                Constants.welcome_msg,
                                 style: WTheme.primaryHeaderStyle2,
                               ),
                               SizedBox(
-                                height: 16,
+                                height: Dimens.padding,
                               ),
-                              Text('Enter your details below'),
+                              Text(Constants.enter_details),
                               SizedBox(
-                                height: 16,
+                                height: Dimens.padding,
                               ),
                               WTextFormField(
                                 validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Please Enter Your Name';
-                                  }
-                                  return null;
+                                  return nameValidator(value);
                                 },
                                 textEditingController: nameController,
-                                label: 'Enter Name',
+                                label: Constants.enter_name,
                               ),
                               SizedBox(
-                                height: 16,
+                                height: Dimens.padding,
                               ),
                               WTextFormField(
                                 textEditingController: emailController,
-                                label: 'Enter Email',
+                                label: Constants.enter_email,
                                 validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Plz Enter your Email';
-                                  } else if (!RegExp(
-                                          r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
-                                      .hasMatch(value)) {
-                                    return 'invalid Email address';
-                                  }
-                                  return null;
+                                  return emailValidator(value);
                                 },
                               ),
                               SizedBox(
-                                height: 16,
+                                height: Dimens.padding,
                               ),
                               WButton(
-                                label: 'Submit',
+                                label: Constants.submit,
                                 onPressed: () => postNameAndEmail(
                                     nameController.text,
                                     emailController.text,
@@ -141,5 +133,23 @@ class _ProfileSubmitScreenState extends State<ProfileSubmitScreen> {
             ),
           )),
     );
+  }
+
+  String? nameValidator(String? value) {
+     if (value!.isEmpty) {
+      return Constants.enter_name;
+    }
+    return null;
+  }
+
+  String? emailValidator(String? value) {
+     if (value!.isEmpty) {
+      return 'Plz Enter your Email';
+    } else if (!RegExp(
+            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+        .hasMatch(value)) {
+      return 'invalid Email address';
+    }
+    return null;
   }
 }

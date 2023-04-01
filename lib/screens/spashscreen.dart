@@ -5,6 +5,7 @@ import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wingman_machinetest/screens/homescreen.dart';
 import 'package:wingman_machinetest/screens/send_otp_screen.dart';
+import 'package:wingman_machinetest/utils/constants.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -17,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
   String? user;
   Future checkLoggedin() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    var _user = prefs.getString('user');
+    var _user = prefs.getString(Constants.sharedpreference_key);
     setState(() {
       user = _user;
     });

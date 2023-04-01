@@ -10,6 +10,8 @@ import 'package:wingman_machinetest/screens/profile_submit_screen.dart';
 import 'package:wingman_machinetest/utils/apptheme.dart';
 import 'package:wingman_machinetest/utils/colors.dart';
 import 'package:pinput/pinput.dart';
+import 'package:wingman_machinetest/utils/constants.dart';
+import 'package:wingman_machinetest/utils/dimens.dart';
 
 class EnterOtpScreen extends StatefulWidget {
   final String mobileNumber;
@@ -35,7 +37,7 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
 
   saveLogginInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('user', 'user');
+    prefs.setString(Constants.sharedpreference_key, 'user');
   }
 
   verifyOtp() async {
@@ -44,14 +46,9 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
       final response = await Provider.of<OtpProvider>(context, listen: false)
           .verfyOtp(requestId: widget.requestId, otp: otpController.text);
       if (!response.success!) {
-        print('aslah : verifyotpscreen :error');
-        print("[[[[[[[[[[[[[[[[fail]]]]]]]]]]]]]]]]");
       } else {
-        print('aslah : verifyotpscreen :success');
-        print("[[[[[[[[[[[[[[[[success]]]]]]]]]]]]]]]]");
         bool otpstatus =
             Provider.of<OtpProvider>(context, listen: false).otpStatus;
-        print("----otstatus--------------$otpstatus-----------");
 
         if (otpstatus) {
           bool profileExist =
@@ -86,10 +83,10 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
                         Text(otpController.text),
                         Text('Might be wrong'),
                         SizedBox(
-                          height: 12,
+                          height: Dimens.Padding_small,
                         ),
                         WButton(
-                          label: 'Close',
+                          label: Constants.close,
                           gradient: true,
                           onPressed: () => Navigator.pop(context),
                         )
@@ -111,7 +108,7 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
           appBar: AppBar(
             elevation: 0.0,
             backgroundColor: Colors.transparent,
-            title: Text('Enter Verification Code'),
+            title: Text(Constants.enter_verification_code),
           ),
           body: GestureDetector(
             onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
@@ -134,21 +131,21 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                'Enter OTP',
+                                Constants.enter_otp,
                                 style: WTheme.primaryHeaderStyle,
                               ),
                               SizedBox(
-                                height: 25,
+                                height: Dimens.Padding_large,
                               ),
-                              Text('We have sent otp on your number'),
+                              Text(Constants.sent_otp_to_mobile),
                               Text('+91-${widget.mobileNumber}'),
                               SizedBox(
-                                height: 16,
+                                height: Dimens.padding,
                               ),
                               Pinput(
                                 validator: (code) {
                                   if (code!.isEmpty) {
-                                    return 'plz enter code to continue';
+                                    return Constants.otp_empty_validator;
                                   }
 
                                   return null;
@@ -168,21 +165,21 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
                                             color: WColors.primaryColor))),
                               ),
                               SizedBox(
-                                height: 40,
+                                height: Dimens.padding_xl,
                               ),
                               WButton(
                                 gradient: true,
-                                label: 'Verify',
+                                label: Constants.verify,
                                 onPressed: () => verifyOtp(),
                               ),
                               SizedBox(
-                                height: 12,
+                                height: Dimens.Padding_small,
                               ),
                               WButton(
                                 gradient: false,
                                 textColor: WColors.primaryColor,
                                 buttonColor: WColors.brightColor,
-                                label: 'Retry',
+                                label: Constants.retry,
                                 onPressed: () {
                                   widget
                                       .returnMobileNumber!(widget.mobileNumber);
