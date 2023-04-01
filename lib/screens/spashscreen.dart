@@ -5,6 +5,7 @@ import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wingman_machinetest/screens/homescreen.dart';
 import 'package:wingman_machinetest/screens/send_otp_screen.dart';
+import 'package:wingman_machinetest/utils/colors.dart';
 import 'package:wingman_machinetest/utils/constants.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -27,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     checkLoggedin().whenComplete(() async {Timer(
-        Duration(seconds: 5),
+        Duration(seconds: 3),
         () => Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) =>user !=null ?HomeScreen(userName: user,) : SendOtpScreen())));});
 
@@ -37,7 +38,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Lottie.asset( 'animation/splash.json',fit: BoxFit.fitHeight,height: MediaQuery.of(context).size.height);
+    return Container(
+      color: WColors.dimWhiteColor,
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      child: Lottie.asset( 'animation/astro.json',));
     
   }
 }
