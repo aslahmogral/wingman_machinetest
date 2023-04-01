@@ -83,8 +83,7 @@ class _SendOtpScreenState extends State<SendOtpScreen> {
                                   height: Dimens.padding_xxl,
                                 ),
                                 WTextFormField(
-                                  hintText: Constants.india_code,
-                                  label: Constants.enter_number,
+                                  label: Constants.india_code,
                                   textEditingController: mobileController,
                                   textInputType: TextInputType.phone,
                                   validator: (value) {

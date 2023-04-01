@@ -28,7 +28,7 @@ class Constants {
   static const enter_number = "Enter Your Mobile Number";
   static const we_will_send_otp = 'We will send you one time \n\t\t\t\t\t\t\t password (OTP)';
   static const carrier_rate = "*Carrier rates may apply*";
-  static const continuee = "continue";
+  static const continuee = "Continue";
   static const india_code = "+91 India";
   static const enter_name_email = "Enter Your Name and Email";
   static const welcome_msg = "Welcome Back";
