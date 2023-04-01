@@ -20,11 +20,14 @@ class OtpProvider with ChangeNotifier {
   Future<FResponse> sendOtp({required String mobileNumber}) async {
     print('aslah : provider : sendotp');
     final response = await otpServices().sendOtp(mobileNumber: mobileNumber);
+    print('sendotp response : ${response}');
     if (response.success!) {
       sendOtpModel sendOtp = response.data;
       _requestId = sendOtp.requestid;
       print('sendotp provider--------------------');
       notifyListeners();
+    } else {
+      print('error');
     }
     return response;
   }

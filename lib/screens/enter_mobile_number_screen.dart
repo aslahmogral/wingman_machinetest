@@ -27,6 +27,7 @@ class _EnterMobileNumberScreenState extends State<EnterMobileNumberScreen> {
     if (isValidated) {
       final response = await Provider.of<OtpProvider>(context, listen: false)
           .sendOtp(mobileNumber: mobileController.text);
+          print(response);
       if (!response.success!) {
         print('aslah : sendotp :error');
       } else {

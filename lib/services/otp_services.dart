@@ -10,14 +10,18 @@ import 'package:wingman_machinetest/utils/response.dart';
 
 class otpServices {
   Future<FResponse> sendOtp({required String mobileNumber}) async {
+    print('<<<<<<<<<<<<   send otp services  >>>>>>>>>>>>>>>>');
     try {
+      print('try');
       final response = await http.post(
         ServiceHelper.sendOtpUrl,
         headers: Headers().httpHeadersWithoutToken(),
         body: jsonEncode({"mobile": mobileNumber}),
       );
+      print('object');
 
       final responseBody = await ServiceHelper.getResponseBody(response);
+      print(responseBody);
 
       var decoded = sendOtpModel.fromJson(responseBody);
       print('success');
