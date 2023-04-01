@@ -28,8 +28,7 @@ class EnterOtpScreen extends StatefulWidget {
 class _EnterOtpScreenState extends State<EnterOtpScreen> {
   bool isNewUser = false;
   final otpController = TextEditingController();
-  // bool profileExist = false;
-  bool? isOtpStatus;
+  bool isOtpStatus = false;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -64,11 +63,29 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
                           token: token,
                         )));
           }
+        } else {
+          showDialog(
+              context: context,
+              builder: (_) => AlertDialog(
+                    title: Text('Something Went Wrong',style: TextStyle(fontWeight: FontWeight.bold),),
+                    content: Column(mainAxisSize: MainAxisSize.min, children: [
+                      Text('The Otp you have entered'),
+                      Text(otpController.text),
+                      Text('Might be wrong'),
+                      SizedBox(height:12,),
+                      WButton(label: 'Close', gradient: true,onPressed: () => Navigator.pop(context),)
+                    ],),
+                  ));
         }
       }
     }
   }
+// @override
+//   void initState() {
+//     isOtpStatus =  Provider.of<OtpProvider>(context, listen: false).otpStatus;
 
+//     super.initState();
+//   }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -115,11 +132,14 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
                               ),
                               Pinput(
                                 validator: (code) {
+                                  // bool otpstatus = Provider.of<OtpProvider>(
+                                  //         context,
+                                  //         listen: false)
+                                  //     .otpStatus;
                                   if (code!.isEmpty) {
                                     return 'plz enter code to continue';
-                                  } else if (isOtpStatus == true) {
-                                    return 'entered otp is wrong';
                                   }
+
                                   return null;
                                 },
                                 mainAxisAlignment:

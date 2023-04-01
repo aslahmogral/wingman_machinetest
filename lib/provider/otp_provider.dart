@@ -17,6 +17,8 @@ class OtpProvider with ChangeNotifier {
   bool get profileExist => _profileExist!;
   bool get otpStatus => _otpStatus!;
 
+  
+
   Future<FResponse> sendOtp({required String mobileNumber}) async {
     print('aslah : provider : sendotp');
     final response = await otpServices().sendOtp(mobileNumber: mobileNumber);
@@ -37,6 +39,8 @@ class OtpProvider with ChangeNotifier {
     final response =
         await otpServices().verifyOtp(requestId: requestId, otp: otp);
     if (response.success!) {
+      print('---------------------+++++++++++++++++++++');
+      print(jsonDecode(jsonEncode(response.data)));
       verifyOtpModel verifyOtp = response.data;
       print(jsonDecode(jsonEncode(verifyOtp)));
 
@@ -51,10 +55,11 @@ class OtpProvider with ChangeNotifier {
     return response;
   }
 
-
-   Future<FResponse> profileSubmit({required String name, required email,required token}) async {
+  Future<FResponse> profileSubmit(
+      {required String name, required email, required token}) async {
     print('aslah : provider : profilesubmit');
-    final response = await otpServices().profileSubmit(name: name, email: email, token: token);
+    final response = await otpServices()
+        .profileSubmit(name: name, email: email, token: token);
     print('profile submit response : ${response}');
     if (response.success!) {
       // sendOtpModel sendOtp = response.data;
@@ -67,7 +72,3 @@ class OtpProvider with ChangeNotifier {
     return response;
   }
 }
-
-
-
-
