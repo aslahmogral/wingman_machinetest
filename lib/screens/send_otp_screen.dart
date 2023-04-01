@@ -67,6 +67,8 @@ class _SendOtpScreenState extends State<SendOtpScreen> {
                 child: Scaffold(
                     backgroundColor: Colors.transparent,
                     appBar: AppBar(
+                      centerTitle: true,
+                      title: Text('Welcome'),
                       automaticallyImplyLeading: false,
                       elevation: 0.0,
                       backgroundColor: Colors.transparent,
