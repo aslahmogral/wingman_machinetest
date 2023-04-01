@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:wingman_machinetest/utils/colors.dart';
 import 'package:wingman_machinetest/utils/dimens.dart';
 
@@ -15,10 +13,10 @@ class WBottomSheet extends StatelessWidget {
           // color: WColors.primaryColor,
           color: WColors.dimWhiteColor,
           borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+              topLeft: Radius.circular(Dimens.borderRadius_small), topRight: Radius.circular(Dimens.borderRadius_small))),
       width: MediaQuery.of(context).size.width,
       child: Padding(
-        padding: EdgeInsets.all(Dimens.padding_large),
+        padding: EdgeInsets.all(Dimens.padding_xl),
         child: child,
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wingman_machinetest/utils/colors.dart';
+import 'package:wingman_machinetest/utils/dimens.dart';
 
 class WTextFormField extends StatefulWidget {
   final TextEditingController? textEditingController;
@@ -34,10 +35,10 @@ class _WTextFormFieldState extends State<WTextFormField> {
           ),
           hintText: widget.hintText,
           border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(Dimens.borderRadius_small),
               borderSide: BorderSide(color: WColors.primaryColor)),
           focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(Dimens.borderRadius_small),
               borderSide: BorderSide(color: WColors.primaryColor))),
     );
   }

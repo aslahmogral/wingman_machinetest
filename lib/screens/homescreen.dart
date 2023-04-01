@@ -1,8 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wingman_machinetest/components/animation_container.dart';
 import 'package:wingman_machinetest/components/bottom_sheet.dart';
+import 'package:wingman_machinetest/components/button.dart';
+import 'package:wingman_machinetest/screens/send_otp_screen.dart';
 import 'package:wingman_machinetest/utils/apptheme.dart';
 import 'package:wingman_machinetest/utils/constants.dart';
+import 'package:wingman_machinetest/utils/dimens.dart';
 
 class HomeScreen extends StatefulWidget {
   final String? userName;
@@ -21,16 +27,28 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: Colors.transparent,
           resizeToAvoidBottomInset: true,
           appBar: AppBar(
+            centerTitle: true,
+            automaticallyImplyLeading: false,
             elevation: 0.0,
             backgroundColor: Colors.transparent,
             title: Text('Welcome ${widget.userName}'),
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    onExit(context);
+                  },
+                  icon: Icon(Icons.exit_to_app))
+            ],
           ),
           body: GestureDetector(
             onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
             child: Container(
               child: Stack(
                 children: [
-                  AnimationContainer(lottie: 'animation/avatar.json'),
+                  InkWell(
+                      onTap: () {},
+                      child:
+                          AnimationContainer(lottie: 'animation/avatar.json')),
                   Positioned(
                     child: Align(
                       alignment: FractionalOffset.bottomCenter,
@@ -57,5 +75,52 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           )),
     );
+  }
+
+  Future<dynamic> onExit(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              backgroundColor: Colors.transparent,
+              content: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(Dimens.borderRadius_small)),
+                child: Padding(
+                  padding: const EdgeInsets.all(Dimens.borderRadius_small),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      InkWell(
+                          onTap: () async {
+                            final SharedPreferences pref =
+                                await SharedPreferences.getInstance();
+                            pref.remove(Constants.sharedpreference_key);
+                            Navigator.pop(context);
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SendOtpScreen()));
+                          },
+                          child: Text(Constants.logout)),
+                      Divider(),
+                      SizedBox(
+                        height: Dimens.Padding_small,
+                      ),
+                      InkWell(onTap: () => exit(0), child: Text(Constants.exit)),
+                      Divider(),
+                      SizedBox(
+                        height: Dimens.Padding_small,
+                      ),
+                      WButton(
+                        label: Constants.cancel,
+                        gradient: true,
+                        onPressed: () => Navigator.pop(context),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ));
   }
 }
