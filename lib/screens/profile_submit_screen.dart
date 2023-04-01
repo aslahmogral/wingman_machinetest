@@ -1,61 +1,53 @@
-import 'dart:convert';
+import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
 import 'package:wingman_machinetest/components/animation_container.dart';
 import 'package:wingman_machinetest/components/bottom_sheet.dart';
 import 'package:wingman_machinetest/components/button.dart';
 import 'package:wingman_machinetest/components/textformfield.dart';
+import 'package:wingman_machinetest/provider/otp_provider.dart';
 import 'package:wingman_machinetest/screens/homescreen.dart';
-import 'package:http/http.dart' as http;
 import 'package:wingman_machinetest/utils/apptheme.dart';
 
-class NewUserScreen extends StatefulWidget {
+class ProfileSubmitScreen extends StatefulWidget {
   final String token;
-  const NewUserScreen({super.key, required this.token});
+  const ProfileSubmitScreen({super.key, required this.token});
 
   @override
-  State<NewUserScreen> createState() => _NewUserScreenState();
+  State<ProfileSubmitScreen> createState() => _ProfileSubmitScreenState();
 }
 
-class _NewUserScreenState extends State<NewUserScreen> {
+class _ProfileSubmitScreenState extends State<ProfileSubmitScreen> {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  postNameAndEmail(String name,email,token) async {
-    var url = Uri.parse('https://test-otp-api.7474224.xyz/profilesubmit.php');
-    Map data = {"name": nameController.text, "email": emailController.text};
-    var body = json.encode(data);
-
+  postNameAndEmail(String name, email, token) async {
     bool isValidated = _formKey.currentState!.validate();
+    final tokenr = await Provider.of<OtpProvider>(context, listen: false).token;
+   
+
     if (isValidated) {
       try {
-        var response = await http.post(url,
-            headers: {
-              "Content-Type": "application/json",
-              "Token": widget.token
-            },
-            body: body);
+        final response = await Provider.of<OtpProvider>(context, listen: false)
+            .profileSubmit(name: name, email: email, token: tokenr);
 
-        if (response.statusCode == 200) {
-          print('responsebody : ${response.body}');
-          var result = json.decode(response.body);
-          print(result);
-
+        if (!response.success!) {
+        } else {
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => HomeScreen(
                         userName: nameController.text,
                       )));
-        } else {
-          print('failed');
         }
       } catch (e) {
         print(e);
       }
     }
   }
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +58,7 @@ class _NewUserScreenState extends State<NewUserScreen> {
           appBar: AppBar(
             elevation: 0.0,
             backgroundColor: Colors.transparent,
-            title: Text('Enter Verification Code'),
+            title: Text('Enter Your Name and Email'),
           ),
           body: GestureDetector(
             onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
@@ -127,7 +119,10 @@ class _NewUserScreenState extends State<NewUserScreen> {
                               ),
                               WButton(
                                 label: 'Submit',
-                                onPressed:()=> postNameAndEmail(nameController.text, emailController.text, widget.token),
+                                onPressed: () => postNameAndEmail(
+                                    nameController.text,
+                                    emailController.text,
+                                    widget.token),
                                 gradient: true,
                               )
                             ],

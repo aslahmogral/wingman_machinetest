@@ -8,13 +8,9 @@ class Headers {
     };
   }
 
-//   httpHeadersWithToken() async {
-//     final pref = await SharedPreferences.getInstance();
-//     String? token = pref.getString(Constants.TOKEN);
-//     return {
-//       'content-type': 'application/json',
-//       'accept': 'application/json',
-//       'authorization': 'Bearer $token'
-//     };
-//   }
+  httpHeadersWithToken(String token)  {
+    // final pref = await SharedPreferences.getInstance();
+    // String? token = pref.getString(Constants.TOKEN);
+    return {"Content-Type": "application/json", "Token": token};
+  }
 }

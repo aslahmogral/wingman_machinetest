@@ -9,15 +9,14 @@ import 'package:wingman_machinetest/screens/enter_otp_screen.dart';
 import 'package:wingman_machinetest/utils/apptheme.dart';
 import 'package:wingman_machinetest/utils/colors.dart';
 
-class EnterMobileNumberScreen extends StatefulWidget {
-  const EnterMobileNumberScreen({super.key});
+class SendOtpScreen extends StatefulWidget {
+  const SendOtpScreen({super.key});
 
   @override
-  State<EnterMobileNumberScreen> createState() =>
-      _EnterMobileNumberScreenState();
+  State<SendOtpScreen> createState() => _SendOtpScreenState();
 }
 
-class _EnterMobileNumberScreenState extends State<EnterMobileNumberScreen> {
+class _SendOtpScreenState extends State<SendOtpScreen> {
   final mobileController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String mobileNumber = '';
@@ -27,7 +26,7 @@ class _EnterMobileNumberScreenState extends State<EnterMobileNumberScreen> {
     if (isValidated) {
       final response = await Provider.of<OtpProvider>(context, listen: false)
           .sendOtp(mobileNumber: mobileController.text);
-          print(response);
+      print(response);
       if (!response.success!) {
         print('aslah : sendotp :error');
       } else {

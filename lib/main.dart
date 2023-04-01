@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:wingman_machinetest/provider/otp_provider.dart';
-import 'package:wingman_machinetest/screens/enter_mobile_number_screen.dart';
+import 'package:wingman_machinetest/screens/send_otp_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<OtpProvider>(create: (_)=>OtpProvider())
+        ChangeNotifierProvider<OtpProvider>(create: (_) => OtpProvider())
       ],
       child: MaterialApp(
         title: 'Wingman',
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
             primary: const Color(0xff9170e2),
           ),
         ),
-        home: const EnterMobileNumberScreen(),
+        home: const SendOtpScreen(),
       ),
     );
   }

@@ -5,7 +5,7 @@ import 'package:wingman_machinetest/components/bottom_sheet.dart';
 import 'package:wingman_machinetest/components/button.dart';
 import 'package:wingman_machinetest/provider/otp_provider.dart';
 import 'package:wingman_machinetest/screens/homescreen.dart';
-import 'package:wingman_machinetest/screens/new_user_screen.dart';
+import 'package:wingman_machinetest/screens/profile_submit_screen.dart';
 import 'package:wingman_machinetest/utils/apptheme.dart';
 import 'package:wingman_machinetest/utils/colors.dart';
 import 'package:pinput/pinput.dart';
@@ -60,7 +60,7 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => NewUserScreen(
+                    builder: (context) => ProfileSubmitScreen(
                           token: token,
                         )));
           }
