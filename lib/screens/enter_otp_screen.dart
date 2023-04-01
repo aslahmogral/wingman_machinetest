@@ -1,3 +1,4 @@
+import 'package:provider/provider.dart';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:wingman_machinetest/components/animation_container.dart';
 import 'package:wingman_machinetest/components/bottom_sheet.dart';
 import 'package:wingman_machinetest/components/button.dart';
+import 'package:wingman_machinetest/provider/otp_provider.dart';
 import 'package:wingman_machinetest/screens/homescreen.dart';
 import 'package:wingman_machinetest/screens/new_user_screen.dart';
 import 'package:wingman_machinetest/utils/apptheme.dart';
@@ -29,56 +31,101 @@ class EnterOtpScreen extends StatefulWidget {
 class _EnterOtpScreenState extends State<EnterOtpScreen> {
   bool isNewUser = false;
   final otpController = TextEditingController();
-  bool profileExist = false;
+  // bool profileExist = false;
   bool? isOtpStatus;
 
   final _formKey = GlobalKey<FormState>();
 
-  enterOtp(String requestId,otp) async {
-    var url = Uri.parse('https://test-otp-api.7474224.xyz/verifyotp.php');
-    Map data = {"request_id": requestId, "code": otp};
-    var body = json.encode(data);
-
+  verifyOtp() async {
     bool isValidated = _formKey.currentState!.validate();
-
     if (isValidated) {
-      try {
-        var response = await http.post(url,
-            headers: {"Content-Type": "application/json"}, body: body);
+      final response = await Provider.of<OtpProvider>(context, listen: false)
+          .verfyOtp(requestId: widget.requestId, otp: otpController.text);
+      if (!response.success!) {
+        print('aslah : verifyotpscreen :error');
+        print("[[[[[[[[[[[[[[[[fail]]]]]]]]]]]]]]]]");
+      } else {
+        print('aslah : verifyotpscreen :success');
+        print("[[[[[[[[[[[[[[[[success]]]]]]]]]]]]]]]]");
 
-        if (response.statusCode == 200) {
-          print('responsebody : ${response.body}');
-          var responseBody = json.decode(response.body);
-          // String invalidOtp = 'invalid otp';
-          // String responseOtp = responseBody['response'];
-          // print('===========');
-          // print(responseBody['response']);
-          // if (responseOtp == invalidOtp) {
-          //   isOtpStatus = true;
-          // }
-
-          profileExist = responseBody['profile_exists'];
-          print('aslah : profile exist $profileExist');
-
-          if (profileExist) {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => HomeScreen()));
-          } else {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => NewUserScreen(
-                          token: responseBody['jwt'],
-                        )));
-          }
+       bool profileExist =
+            Provider.of<OtpProvider>(context, listen: false).profileExist;
+            // bool otpstatus =
+            // Provider.of<OtpProvider>(context, listen: false).otpStatus;
+        // if(otpstatus==true)
+        if (profileExist  ) {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => HomeScreen()));
         } else {
+          var token = Provider.of<OtpProvider>(context,listen: false).token;
           print('failed');
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => NewUserScreen(
+                        token:token,
+                      )));
         }
-      } catch (e) {
-        print(e);
+
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (context) => EnterOtpScreen(
+        //               returnMobileNumber: (value) {
+        //                 mobileNumber = value;
+        //               },
+        //               requestId: requestId,
+        //               mobileNumber: mobileController.text,
+        //             )));
       }
     }
   }
+
+  // enterOtp(String requestId, otp) async {
+  //   var url = Uri.parse('https://test-otp-api.7474224.xyz/verifyotp.php');
+  //   Map data = {"request_id": requestId, "code": otp};
+  //   var body = json.encode(data);
+
+  //   bool isValidated = _formKey.currentState!.validate();
+
+  //   if (isValidated) {
+  //     try {
+  //       var response = await http.post(url,
+  //           headers: {"Content-Type": "application/json"}, body: body);
+
+  //       if (response.statusCode == 200) {
+  //         print('responsebody : ${response.body}');
+  //         var responseBody = json.decode(response.body);
+  //         // String invalidOtp = 'invalid otp';
+  //         // String responseOtp = responseBody['response'];
+  //         // print('===========');
+  //         // print(responseBody['response']);
+  //         // if (responseOtp == invalidOtp) {
+  //         //   isOtpStatus = true;
+  //         // }
+
+  //         profileExist = responseBody['profile_exists'];
+  //         print('aslah : profile exist $profileExist');
+
+  //         if (profileExist) {
+  //           Navigator.push(
+  //               context, MaterialPageRoute(builder: (context) => HomeScreen()));
+  //         } else {
+  //           Navigator.push(
+  //               context,
+  //               MaterialPageRoute(
+  //                   builder: (context) => NewUserScreen(
+  //                         token: responseBody['jwt'],
+  //                       )));
+  //         }
+  //       } else {
+  //         print('failed');
+  //       }
+  //     } catch (e) {
+  //       print(e);
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +200,7 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
                               WButton(
                                 gradient: true,
                                 label: 'Verify',
-                                onPressed:()=> enterOtp(widget.requestId,otpController.text),
+                                onPressed: () => verifyOtp(),
                               ),
                               SizedBox(
                                 height: 12,

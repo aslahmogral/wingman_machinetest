@@ -1,15 +1,13 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wingman_machinetest/components/animation_container.dart';
 import 'package:wingman_machinetest/components/bottom_sheet.dart';
 import 'package:wingman_machinetest/components/button.dart';
 import 'package:wingman_machinetest/components/textformfield.dart';
+import 'package:wingman_machinetest/provider/otp_provider.dart';
 import 'package:wingman_machinetest/screens/enter_otp_screen.dart';
-import 'package:http/http.dart' as http;
 import 'package:wingman_machinetest/utils/apptheme.dart';
 import 'package:wingman_machinetest/utils/colors.dart';
-import 'package:lottie/lottie.dart';
 
 class EnterMobileNumberScreen extends StatefulWidget {
   const EnterMobileNumberScreen({super.key});
@@ -24,38 +22,29 @@ class _EnterMobileNumberScreenState extends State<EnterMobileNumberScreen> {
   final _formKey = GlobalKey<FormState>();
   String mobileNumber = '';
 
-  enterNumber(String mobileNumber) async {
-    // print(mobileController.text);
-    var url = 'https://test-otp-api.7474224.xyz/sendotp.php';
-    Map data = {"mobile": mobileNumber};
-    var body = json.encode(data);
-    try {
-      var response = await http.post(Uri.parse(url),
-          headers: {"Content-Type": "application/json"}, body: body);
-
-      if (response.statusCode == 200) {
-        print('passed');
-        var result = json.decode(response.body);
-        print(result);
-        print(result['request_id']);
-        bool isValidated = _formKey.currentState!.validate();
-        if (isValidated) {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => EnterOtpScreen(
-                        returnMobileNumber: (value) {
-                          mobileNumber = value;
-                        },
-                        requestId: result['request_id'],
-                        mobileNumber: mobileController.text,
-                      )));
-        }
+  sendOtp() async {
+    bool isValidated = _formKey.currentState!.validate();
+    if (isValidated) {
+      final response = await Provider.of<OtpProvider>(context, listen: false)
+          .sendOtp(mobileNumber: mobileController.text);
+      if (!response.success!) {
+        print('aslah : sendotp :error');
       } else {
-        print('failed');
+        print('aslah : sendotp :success');
+        String requestId =
+            Provider.of<OtpProvider>(context, listen: false).requestId;
+
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => EnterOtpScreen(
+                      returnMobileNumber: (value) {
+                        mobileNumber = value;
+                      },
+                      requestId: requestId,
+                      mobileNumber: mobileController.text,
+                    )));
       }
-    } catch (e) {
-      print(e);
     }
   }
 
@@ -119,7 +108,7 @@ class _EnterMobileNumberScreenState extends State<EnterMobileNumberScreen> {
                                 WButton(
                                   gradient: true,
                                   label: 'CONTINUE',
-                                  onPressed: () =>enterNumber(mobileController.text),
+                                  onPressed: () => sendOtp(),
                                 ),
                               ],
                             ),
