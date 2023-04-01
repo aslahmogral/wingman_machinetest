@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wingman_machinetest/components/animation_container.dart';
 import 'package:wingman_machinetest/components/bottom_sheet.dart';
 import 'package:wingman_machinetest/components/button.dart';
+import 'package:wingman_machinetest/components/loader.dart';
 import 'package:wingman_machinetest/provider/otp_provider.dart';
 import 'package:wingman_machinetest/screens/homescreen.dart';
 import 'package:wingman_machinetest/screens/profile_submit_screen.dart';
@@ -32,6 +33,7 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
   bool isNewUser = false;
   final otpController = TextEditingController();
   bool isOtpStatus = false;
+  ValueNotifier<bool> isLoadingNotifier = ValueNotifier(false);
 
   final _formKey = GlobalKey<FormState>();
 
@@ -43,9 +45,12 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
   verifyOtp() async {
     bool isValidated = _formKey.currentState!.validate();
     if (isValidated) {
+      isLoadingNotifier.value = true;
+
       final response = await Provider.of<OtpProvider>(context, listen: false)
           .verfyOtp(requestId: widget.requestId, otp: otpController.text);
       if (!response.success!) {
+        isLoadingNotifier.value = false;
       } else {
         bool otpstatus =
             Provider.of<OtpProvider>(context, listen: false).otpStatus;
@@ -68,7 +73,10 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
                           token: token,
                         )));
           }
+          isLoadingNotifier.value = false;
         } else {
+          isLoadingNotifier.value = false;
+
           showDialog(
               context: context,
               builder: (_) => AlertDialog(
@@ -100,102 +108,109 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(gradient: WTheme.primaryGradient),
-      child: Scaffold(
-          backgroundColor: Colors.transparent,
-          resizeToAvoidBottomInset: true,
-          appBar: AppBar(
-            elevation: 0.0,
-            backgroundColor: Colors.transparent,
-            title: Text(Constants.enter_verification_code),
-          ),
-          body: GestureDetector(
-            onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
-            child: Container(
-              child: Stack(
-                children: [
-                  InkWell(
-                      onTap: () {
-                        print(isOtpStatus);
-                      },
-                      child: AnimationContainer(lottie: 'animation/otp.json')),
-                  Positioned(
-                    child: Align(
-                      alignment: FractionalOffset.bottomCenter,
-                      child: WBottomSheet(
-                          child: SingleChildScrollView(
-                        child: Form(
-                          key: _formKey,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                Constants.enter_otp,
-                                style: WTheme.primaryHeaderStyle,
-                              ),
-                              SizedBox(
-                                height: Dimens.Padding_large,
-                              ),
-                              Text(Constants.sent_otp_to_mobile),
-                              Text('+91-${widget.mobileNumber}'),
-                              SizedBox(
-                                height: Dimens.padding,
-                              ),
-                              Pinput(
-                                validator: (code) {
-                                  if (code!.isEmpty) {
-                                    return Constants.otp_empty_validator;
-                                  }
-
-                                  return null;
-                                },
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                controller: otpController,
-                                length: 6,
-                                defaultPinTheme: PinTheme(
-                                    height: 50,
-                                    width: 50,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(
-                                            color: WColors.primaryColor))),
-                              ),
-                              SizedBox(
-                                height: Dimens.padding_xl,
-                              ),
-                              WButton(
-                                gradient: true,
-                                label: Constants.verify,
-                                onPressed: () => verifyOtp(),
-                              ),
-                              SizedBox(
-                                height: Dimens.Padding_small,
-                              ),
-                              WButton(
-                                gradient: false,
-                                textColor: WColors.primaryColor,
-                                buttonColor: WColors.brightColor,
-                                label: Constants.retry,
-                                onPressed: () {
-                                  widget
-                                      .returnMobileNumber!(widget.mobileNumber);
-                                  Navigator.pop(context);
-                                },
-                              )
-                            ],
-                          ),
-                        ),
-                      )),
-                    ),
-                  )
-                ],
+    return ValueListenableBuilder(
+      valueListenable: isLoadingNotifier,
+      builder: (contex,bool isloading,child) {
+        return isloading
+            ?LoaderBird()
+            : Container(
+          decoration: BoxDecoration(gradient: WTheme.primaryGradient),
+          child: Scaffold(
+              backgroundColor: Colors.transparent,
+              resizeToAvoidBottomInset: true,
+              appBar: AppBar(
+                elevation: 0.0,
+                backgroundColor: Colors.transparent,
+                title: Text(Constants.enter_verification_code),
               ),
-            ),
-          )),
+              body: GestureDetector(
+                onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
+                child: Container(
+                  child: Stack(
+                    children: [
+                      InkWell(
+                          onTap: () {
+                            print(isOtpStatus);
+                          },
+                          child: AnimationContainer(lottie: 'animation/otp.json')),
+                      Positioned(
+                        child: Align(
+                          alignment: FractionalOffset.bottomCenter,
+                          child: WBottomSheet(
+                              child: SingleChildScrollView(
+                            child: Form(
+                              key: _formKey,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    Constants.enter_otp,
+                                    style: WTheme.primaryHeaderStyle,
+                                  ),
+                                  SizedBox(
+                                    height: Dimens.Padding_large,
+                                  ),
+                                  Text(Constants.sent_otp_to_mobile),
+                                  Text('+91-${widget.mobileNumber}'),
+                                  SizedBox(
+                                    height: Dimens.padding,
+                                  ),
+                                  Pinput(
+                                    validator: (code) {
+                                      if (code!.isEmpty) {
+                                        return Constants.otp_empty_validator;
+                                      }
+
+                                      return null;
+                                    },
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    controller: otpController,
+                                    length: 6,
+                                    defaultPinTheme: PinTheme(
+                                        height: 50,
+                                        width: 50,
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.circular(10),
+                                            border: Border.all(
+                                                color: WColors.primaryColor))),
+                                  ),
+                                  SizedBox(
+                                    height: Dimens.padding_xl,
+                                  ),
+                                  WButton(
+                                    gradient: true,
+                                    label: Constants.verify,
+                                    onPressed: () => verifyOtp(),
+                                  ),
+                                  SizedBox(
+                                    height: Dimens.Padding_small,
+                                  ),
+                                  WButton(
+                                    gradient: false,
+                                    textColor: WColors.primaryColor,
+                                    buttonColor: WColors.brightColor,
+                                    label: Constants.retry,
+                                    onPressed: () {
+                                      widget
+                                          .returnMobileNumber!(widget.mobileNumber);
+                                      Navigator.pop(context);
+                                    },
+                                  )
+                                ],
+                              ),
+                            ),
+                          )),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )),
+        );
+      }
     );
   }
 }

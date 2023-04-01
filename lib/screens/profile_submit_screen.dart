@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wingman_machinetest/components/animation_container.dart';
 import 'package:wingman_machinetest/components/bottom_sheet.dart';
 import 'package:wingman_machinetest/components/button.dart';
+import 'package:wingman_machinetest/components/loader.dart';
 import 'package:wingman_machinetest/components/textformfield.dart';
 import 'package:wingman_machinetest/provider/otp_provider.dart';
 import 'package:wingman_machinetest/screens/homescreen.dart';
@@ -24,6 +25,8 @@ class _ProfileSubmitScreenState extends State<ProfileSubmitScreen> {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  ValueNotifier<bool> isLoadingNotifier = ValueNotifier(false);
+
 
   saveLogginInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -35,11 +38,15 @@ class _ProfileSubmitScreenState extends State<ProfileSubmitScreen> {
     final tokenr = await Provider.of<OtpProvider>(context, listen: false).token;
 
     if (isValidated) {
+      isLoadingNotifier.value = true;
+
       try {
         final response = await Provider.of<OtpProvider>(context, listen: false)
             .profileSubmit(name: name, email: email, token: tokenr);
 
         if (!response.success!) {
+      isLoadingNotifier.value = false;
+
         } else {
           saveLogginInfo();
           Navigator.pushReplacement(
@@ -49,89 +56,102 @@ class _ProfileSubmitScreenState extends State<ProfileSubmitScreen> {
                         userName: nameController.text,
                         
                       )));
+      isLoadingNotifier.value = false;
+
         }
       } catch (e) {
         print(e);
+
       }
     }
+      isLoadingNotifier.value = false;
+
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(gradient: WTheme.primaryGradient),
-      child: Scaffold(
-          backgroundColor: Colors.transparent,
-          appBar: AppBar(
-            elevation: 0.0,
-            backgroundColor: Colors.transparent,
-            title: Text(Constants.enter_name_email),
-          ),
-          body: GestureDetector(
-            onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
-            child: Container(
-              child: Stack(
-                children: [
-                  AnimationContainer(lottie: 'animation/newuser.json'),
-                  Positioned(
-                    child: Align(
-                      alignment: FractionalOffset.bottomCenter,
-                      child: WBottomSheet(
-                          child: Form(
-                        key: _formKey,
-                        child: SingleChildScrollView(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                Constants.welcome_msg,
-                                style: WTheme.primaryHeaderStyle2,
-                              ),
-                              SizedBox(
-                                height: Dimens.padding,
-                              ),
-                              Text(Constants.enter_details),
-                              SizedBox(
-                                height: Dimens.padding,
-                              ),
-                              WTextFormField(
-                                validator: (value) {
-                                  return nameValidator(value);
-                                },
-                                textEditingController: nameController,
-                                label: Constants.enter_name,
-                              ),
-                              SizedBox(
-                                height: Dimens.padding,
-                              ),
-                              WTextFormField(
-                                textEditingController: emailController,
-                                label: Constants.enter_email,
-                                validator: (value) {
-                                  return emailValidator(value);
-                                },
-                              ),
-                              SizedBox(
-                                height: Dimens.padding,
-                              ),
-                              WButton(
-                                label: Constants.submit,
-                                onPressed: () => postNameAndEmail(
-                                    nameController.text,
-                                    emailController.text,
-                                    widget.token),
-                                gradient: true,
-                              )
-                            ],
-                          ),
-                        ),
-                      )),
-                    ),
-                  )
-                ],
+    return ValueListenableBuilder(
+      valueListenable: isLoadingNotifier,
+
+      builder: (contex,bool isloading,child) {
+        return isloading
+            ?LoaderBird()
+            :  Container(
+          decoration: BoxDecoration(gradient: WTheme.primaryGradient),
+          child: Scaffold(
+              backgroundColor: Colors.transparent,
+              appBar: AppBar(
+                elevation: 0.0,
+                backgroundColor: Colors.transparent,
+                title: Text(Constants.enter_name_email),
               ),
-            ),
-          )),
+              body: GestureDetector(
+                onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
+                child: Container(
+                  child: Stack(
+                    children: [
+                      AnimationContainer(lottie: 'animation/newuser.json'),
+                      Positioned(
+                        child: Align(
+                          alignment: FractionalOffset.bottomCenter,
+                          child: WBottomSheet(
+                              child: Form(
+                            key: _formKey,
+                            child: SingleChildScrollView(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    Constants.welcome_msg,
+                                    style: WTheme.primaryHeaderStyle2,
+                                  ),
+                                  SizedBox(
+                                    height: Dimens.padding,
+                                  ),
+                                  Text(Constants.enter_details),
+                                  SizedBox(
+                                    height: Dimens.padding,
+                                  ),
+                                  WTextFormField(
+                                    validator: (value) {
+                                      return nameValidator(value);
+                                    },
+                                    textEditingController: nameController,
+                                    label: Constants.enter_name,
+                                  ),
+                                  SizedBox(
+                                    height: Dimens.padding,
+                                  ),
+                                  WTextFormField(
+                                    textEditingController: emailController,
+                                    label: Constants.enter_email,
+                                    validator: (value) {
+                                      return emailValidator(value);
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: Dimens.padding,
+                                  ),
+                                  WButton(
+                                    label: Constants.submit,
+                                    onPressed: () => postNameAndEmail(
+                                        nameController.text,
+                                        emailController.text,
+                                        widget.token),
+                                    gradient: true,
+                                  )
+                                ],
+                              ),
+                            ),
+                          )),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )),
+        );
+      }
     );
   }
 
