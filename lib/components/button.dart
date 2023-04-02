@@ -18,21 +18,27 @@ class WButton extends StatefulWidget {
 class W_ButtonState extends State<WButton> {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-        onTap: widget.onPressed,
-        child: Container(
-          decoration: BoxDecoration(
-            gradient:widget.gradient ? WTheme.primaryGradient : null,
-              color:widget.gradient? null : widget.buttonColor ?? WColors.primaryColor,
-              borderRadius: BorderRadius.circular(20)),
-          height: 60,
-          width: MediaQuery.of(context).size.width,
-          child: Center(
-            child: Text(
-              widget.label,
-              style: TextStyle(color:widget.textColor?? WColors.dimWhiteColor),
-            ),
-          ),
-        ));
+    return Container(
+       decoration: BoxDecoration(
+              gradient:widget.gradient ? WTheme.primaryGradient : null,
+                color:widget.gradient? null : widget.buttonColor ?? WColors.primaryColor,
+                borderRadius: BorderRadius.circular(20)),
+      child: Material(
+        child: InkWell(
+            onTap: widget.onPressed,
+            child: Container(
+             
+              height: 60,
+              width: MediaQuery.of(context).size.width,
+              child: Center(
+                child: Text(
+                  widget.label,
+                  style: TextStyle(color:widget.textColor?? WColors.dimWhiteColor),
+                ),
+              ),
+            )),
+            color: Colors.transparent,
+      ),
+    );
   }
 }
