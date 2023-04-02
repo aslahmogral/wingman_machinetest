@@ -232,7 +232,7 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
                                       Navigator.pop(context);
                                     },
                                   ),
-                                  SizedBox(height: Dimens.padding_xl,)
+                                  SizedBox(height: Dimens.padding,)
                                 ],
                               ),
                             ),

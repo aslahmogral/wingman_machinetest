@@ -83,6 +83,7 @@ class _SendOtpScreenState extends State<SendOtpScreen> {
                           child2: Form(
                             key: _formKey,
                             child: SingleChildScrollView(
+                              scrollDirection: Axis.vertical,
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
@@ -121,7 +122,7 @@ class _SendOtpScreenState extends State<SendOtpScreen> {
                                     label: Constants.continuee,
                                     onPressed: () => sendOtp(),
                                   ),
-                                  SizedBox(height: Dimens.padding_xl,)
+                                  SizedBox(height: Dimens.padding,)
                                 ],
                               ),
                             ),

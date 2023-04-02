@@ -123,7 +123,7 @@ class _ProfileSubmitScreenState extends State<ProfileSubmitScreen> {
                                         },
                                       ),
                                       SizedBox(
-                                        height: Dimens.padding_xxl,
+                                        height: Dimens.padding,
                                       ),
                                       WButton(
                                         label: Constants.submit,
@@ -133,9 +133,7 @@ class _ProfileSubmitScreenState extends State<ProfileSubmitScreen> {
                                         ),
                                         gradient: true,
                                       ),
-                                       SizedBox(
-                                        height: Dimens.padding_xl,
-                                      ),
+                                      
                                     ],
                                   ),
                                 ),
