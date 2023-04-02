@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wingman_machinetest/components/animation_container.dart';
 import 'package:wingman_machinetest/components/bottom_sheet.dart';
 import 'package:wingman_machinetest/components/button.dart';
+import 'package:wingman_machinetest/components/custom_theme.dart';
 import 'package:wingman_machinetest/components/loader.dart';
 import 'package:wingman_machinetest/provider/otp_provider.dart';
 import 'package:wingman_machinetest/screens/homescreen.dart';
@@ -109,36 +110,27 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-      valueListenable: isLoadingNotifier,
-      builder: (contex,bool isloading,child) {
-        return isloading
-            ?LoaderBird()
-            : Container(
-          decoration: BoxDecoration(gradient: WTheme.primaryGradient),
-          child: Scaffold(
-              backgroundColor: Colors.transparent,
-              resizeToAvoidBottomInset: true,
-              appBar: AppBar(
-                elevation: 0.0,
-                backgroundColor: Colors.transparent,
-                title: Text(Constants.enter_verification_code),
-              ),
-              body: GestureDetector(
-                onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
-                child: Container(
-                  child: Stack(
-                    children: [
-                      InkWell(
-                          onTap: () {
-                            print(isOtpStatus);
-                          },
-                          child: AnimationContainer(lottie: 'animation/otp.json')),
-                      Positioned(
-                        child: Align(
-                          alignment: FractionalOffset.bottomCenter,
-                          child: WBottomSheet(
-                              child: SingleChildScrollView(
-                            child: Form(
+        valueListenable: isLoadingNotifier,
+        builder: (contex, bool isloading, child) {
+          return isloading
+              ? LoaderBird()
+              : Container(
+                  decoration: BoxDecoration(gradient: WTheme.primaryGradient),
+                  child: Scaffold(
+                      backgroundColor: Colors.transparent,
+                      resizeToAvoidBottomInset: true,
+                      appBar: AppBar(
+                        elevation: 0.0,
+                        backgroundColor: Colors.transparent,
+                        title: Text(Constants.enter_verification_code),
+                      ),
+                      body: GestureDetector(
+                          onTap: () =>
+                              FocusManager.instance.primaryFocus!.unfocus(),
+                          child: CustomTheme(
+                            child1: AnimationContainer(
+                                lottie: 'animation/otp.json'),
+                            child2: Form(
                               key: _formKey,
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -165,7 +157,8 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
                                     },
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     controller: otpController,
                                     length: 6,
                                     defaultPinTheme: PinTheme(
@@ -173,7 +166,8 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
                                         width: 50,
                                         decoration: BoxDecoration(
                                             color: Colors.white,
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
                                             border: Border.all(
                                                 color: WColors.primaryColor))),
                                   ),
@@ -194,23 +188,16 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
                                     buttonColor: WColors.brightColor,
                                     label: Constants.retry,
                                     onPressed: () {
-                                      widget
-                                          .returnMobileNumber!(widget.mobileNumber);
+                                      widget.returnMobileNumber!(
+                                          widget.mobileNumber);
                                       Navigator.pop(context);
                                     },
                                   )
                                 ],
                               ),
                             ),
-                          )),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              )),
-        );
-      }
-    );
+                          ))),
+                );
+        });
   }
 }

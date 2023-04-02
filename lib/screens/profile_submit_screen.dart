@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wingman_machinetest/components/animation_container.dart';
 import 'package:wingman_machinetest/components/bottom_sheet.dart';
 import 'package:wingman_machinetest/components/button.dart';
+import 'package:wingman_machinetest/components/custom_theme.dart';
 import 'package:wingman_machinetest/components/loader.dart';
 import 'package:wingman_machinetest/components/textformfield.dart';
 import 'package:wingman_machinetest/provider/otp_provider.dart';
@@ -27,7 +28,6 @@ class _ProfileSubmitScreenState extends State<ProfileSubmitScreen> {
   final _formKey = GlobalKey<FormState>();
   ValueNotifier<bool> isLoadingNotifier = ValueNotifier(false);
 
-
   saveLogginInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(Constants.sharedpreference_key, nameController.text);
@@ -45,8 +45,7 @@ class _ProfileSubmitScreenState extends State<ProfileSubmitScreen> {
             .profileSubmit(name: name, email: email, token: tokenr);
 
         if (!response.success!) {
-      isLoadingNotifier.value = false;
-
+          isLoadingNotifier.value = false;
         } else {
           saveLogginInfo();
           Navigator.pushReplacement(
@@ -54,116 +53,100 @@ class _ProfileSubmitScreenState extends State<ProfileSubmitScreen> {
               MaterialPageRoute(
                   builder: (context) => HomeScreen(
                         userName: nameController.text,
-                        
                       )));
-      isLoadingNotifier.value = false;
-
+          isLoadingNotifier.value = false;
         }
       } catch (e) {
         print(e);
-
       }
     }
-      isLoadingNotifier.value = false;
-
+    isLoadingNotifier.value = false;
   }
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-      valueListenable: isLoadingNotifier,
-
-      builder: (contex,bool isloading,child) {
-        return isloading
-            ?LoaderBird()
-            :  Container(
-          decoration: BoxDecoration(gradient: WTheme.primaryGradient),
-          child: Scaffold(
-              backgroundColor: Colors.transparent,
-              appBar: AppBar(
-                elevation: 0.0,
-                backgroundColor: Colors.transparent,
-                title: Text(Constants.enter_name_email),
-              ),
-              body: GestureDetector(
-                onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
-                child: Container(
-                  child: Stack(
-                    children: [
-                      AnimationContainer(lottie: 'animation/newuser.json'),
-                      Positioned(
-                        child: Align(
-                          alignment: FractionalOffset.bottomCenter,
-                          child: WBottomSheet(
-                              child: Form(
-                            key: _formKey,
-                            child: SingleChildScrollView(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    Constants.welcome_msg,
-                                    style: WTheme.primaryHeaderStyle2,
+        valueListenable: isLoadingNotifier,
+        builder: (contex, bool isloading, child) {
+          return isloading
+              ? LoaderBird()
+              : Container(
+                  decoration: BoxDecoration(gradient: WTheme.primaryGradient),
+                  child: Scaffold(
+                      backgroundColor: Colors.transparent,
+                      appBar: AppBar(
+                        elevation: 0.0,
+                        backgroundColor: Colors.transparent,
+                        title: Text(Constants.enter_name_email),
+                      ),
+                      body: GestureDetector(
+                          onTap: () =>
+                              FocusManager.instance.primaryFocus!.unfocus(),
+                          child: CustomTheme(
+                              child1: AnimationContainer(
+                                  lottie: 'animation/newuser.json'),
+                              child2: Form(
+                                key: _formKey,
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        Constants.welcome_msg,
+                                        style: WTheme.primaryHeaderStyle2,
+                                      ),
+                                      SizedBox(
+                                        height: Dimens.padding,
+                                      ),
+                                      Text(Constants.enter_details),
+                                      SizedBox(
+                                        height: Dimens.padding,
+                                      ),
+                                      WTextFormField(
+                                        validator: (value) {
+                                          return nameValidator(value);
+                                        },
+                                        textEditingController: nameController,
+                                        label: Constants.enter_name,
+                                      ),
+                                      SizedBox(
+                                        height: Dimens.padding,
+                                      ),
+                                      WTextFormField(
+                                        textEditingController: emailController,
+                                        label: Constants.enter_email,
+                                        validator: (value) {
+                                          return emailValidator(value);
+                                        },
+                                      ),
+                                      SizedBox(
+                                        height: Dimens.padding,
+                                      ),
+                                      WButton(
+                                        label: Constants.submit,
+                                        onPressed: () => postNameAndEmail(
+                                            nameController.text,
+                                            emailController.text,
+                                            widget.token),
+                                        gradient: true,
+                                      )
+                                    ],
                                   ),
-                                  SizedBox(
-                                    height: Dimens.padding,
-                                  ),
-                                  Text(Constants.enter_details),
-                                  SizedBox(
-                                    height: Dimens.padding,
-                                  ),
-                                  WTextFormField(
-                                    validator: (value) {
-                                      return nameValidator(value);
-                                    },
-                                    textEditingController: nameController,
-                                    label: Constants.enter_name,
-                                  ),
-                                  SizedBox(
-                                    height: Dimens.padding,
-                                  ),
-                                  WTextFormField(
-                                    textEditingController: emailController,
-                                    label: Constants.enter_email,
-                                    validator: (value) {
-                                      return emailValidator(value);
-                                    },
-                                  ),
-                                  SizedBox(
-                                    height: Dimens.padding,
-                                  ),
-                                  WButton(
-                                    label: Constants.submit,
-                                    onPressed: () => postNameAndEmail(
-                                        nameController.text,
-                                        emailController.text,
-                                        widget.token),
-                                    gradient: true,
-                                  )
-                                ],
-                              ),
-                            ),
-                          )),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              )),
-        );
-      }
-    );
+                                ),
+                              )))),
+                );
+        });
   }
 
   String? nameValidator(String? value) {
-     if (value!.isEmpty) {
+    if (value!.isEmpty) {
       return Constants.enter_name;
     }
     return null;
   }
 
   String? emailValidator(String? value) {
-     if (value!.isEmpty) {
+    if (value!.isEmpty) {
       return 'Plz Enter your Email';
     } else if (!RegExp(
             r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:wingman_machinetest/components/animation_container.dart';
 import 'package:wingman_machinetest/components/bottom_sheet.dart';
 import 'package:wingman_machinetest/components/button.dart';
+import 'package:wingman_machinetest/components/custom_theme.dart';
 import 'package:wingman_machinetest/components/loader.dart';
 import 'package:wingman_machinetest/components/textformfield.dart';
 import 'package:wingman_machinetest/provider/otp_provider.dart';
@@ -58,90 +59,79 @@ class _SendOtpScreenState extends State<SendOtpScreen> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-      valueListenable: isLoadingNotifier,
-      builder: (contex,bool isloading,child) {
-        return isloading
-            ?LoaderBird()
-            : Container(
-                decoration: BoxDecoration(gradient: WTheme.primaryGradient),
-                child: Scaffold(
-                    backgroundColor: Colors.transparent,
-                    appBar: AppBar(
-                      centerTitle: true,
-                      title: Text('Welcome'),
-                      automaticallyImplyLeading: false,
-                      elevation: 0.0,
+        valueListenable: isLoadingNotifier,
+        builder: (contex, bool isloading, child) {
+          return isloading
+              ? LoaderBird()
+              : Container(
+                  decoration: BoxDecoration(gradient: WTheme.primaryGradient),
+                  child: Scaffold(
                       backgroundColor: Colors.transparent,
-                    ),
-                    body: GestureDetector(
-                      onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
-                      child: Container(
-                        child: Stack(
-                          children: [
-                            AnimationContainer(
-                                lottie: 'animation/mobilenumber.json'),
-                            Positioned(
-                              child: Align(
-                                alignment: FractionalOffset.bottomCenter,
-                                child: WBottomSheet(
-                                  child: Form(
-                                    key: _formKey,
-                                    child: SingleChildScrollView(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            Constants.enter_number,
-                                            style: WTheme.primaryHeaderStyle,
-                                          ),
-                                          SizedBox(
-                                            height: Dimens.padding_xxl,
-                                          ),
-                                          WTextFormField(
-                                            label: Constants.india_code,
-                                            textEditingController: mobileController,
-                                            textInputType: TextInputType.phone,
-                                            validator: (value) {
-                                              return regExpMobileNumber(value);
-                                            },
-                                          ),
-                                          SizedBox(
-                                            height: Dimens.padding_xxl,
-                                          ),
-                                          Text(Constants.we_will_send_otp),
-                                          SizedBox(
-                                            height: Dimens.Padding_xs,
-                                          ),
-                                          Text(
-                                            Constants.carrier_rate,
-                                            style: TextStyle(
-                                                color: WColors.primaryColor),
-                                          ),
-                                          SizedBox(
-                                            height: Dimens.padding_xxl,
-                                          ),
-                                          WButton(
-                                            gradient: true,
-                                            label: Constants.continuee,
-                                            onPressed: () => sendOtp(),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
+                      appBar: AppBar(
+                        centerTitle: true,
+                        title: Text('Welcome'),
+                        automaticallyImplyLeading: false,
+                        elevation: 0.0,
+                        backgroundColor: Colors.transparent,
                       ),
-                    )
+                      body: GestureDetector(
+                        onTap: () =>
+                            FocusManager.instance.primaryFocus!.unfocus(),
+                        child: CustomTheme(
+                          child1: AnimationContainer(
+                              lottie: 'animation/mobilenumber.json'),
+                          child2: Form(
+                            key: _formKey,
+                            child: SingleChildScrollView(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    Constants.enter_number,
+                                    style: WTheme.primaryHeaderStyle,
+                                  ),
+                                  SizedBox(
+                                    height: Dimens.padding_xxl,
+                                  ),
+                                  WTextFormField(
+                                    label: Constants.india_code,
+                                    textEditingController: mobileController,
+                                    textInputType: TextInputType.phone,
+                                    validator: (value) {
+                                      return regExpMobileNumber(value);
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: Dimens.padding_xxl,
+                                  ),
+                                  Text(Constants.we_will_send_otp),
+                                  SizedBox(
+                                    height: Dimens.Padding_xs,
+                                  ),
+                                  Text(
+                                    Constants.carrier_rate,
+                                    style:
+                                        TextStyle(color: WColors.primaryColor),
+                                  ),
+                                  SizedBox(
+                                    height: Dimens.padding_xxl,
+                                  ),
+                                  WButton(
+                                    gradient: true,
+                                    label: Constants.continuee,
+                                    onPressed: () => sendOtp(),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
 
-                    // ),
-                    ),
-              );
-      }
-    );
+                      // ),
+                      ),
+                );
+        });
   }
 
   String? regExpMobileNumber(String? value) {

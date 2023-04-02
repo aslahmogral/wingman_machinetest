@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wingman_machinetest/components/animation_container.dart';
 import 'package:wingman_machinetest/components/bottom_sheet.dart';
 import 'package:wingman_machinetest/components/button.dart';
+import 'package:wingman_machinetest/components/custom_theme.dart';
 import 'package:wingman_machinetest/screens/send_otp_screen.dart';
 import 'package:wingman_machinetest/utils/apptheme.dart';
 import 'package:wingman_machinetest/utils/constants.dart';
@@ -42,18 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           body: GestureDetector(
             onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
-            child: Container(
-              child: Stack(
-                children: [
-                  InkWell(
-                      onTap: () {},
-                      child:
-                          AnimationContainer(lottie: 'animation/avatar.json')),
-                  Positioned(
-                    child: Align(
-                      alignment: FractionalOffset.bottomCenter,
-                      child: WBottomSheet(
-                          child: Container(
+            child:CustomTheme(child1: AnimationContainer(lottie: 'animation/avatar.json'), child2:  Container(
                         height: MediaQuery.of(context).size.height / 2.2,
                         child: SingleChildScrollView(
                           child: Column(
@@ -67,13 +57,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                         ),
-                      )),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          )),
+                      ))
+            
+            
+              )),
     );
   }
 
