@@ -20,9 +20,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<OtpProvider>(create: (_) => OtpProvider())
       ],
       child: MaterialApp(
-        routes: {
-          '/homescreen' : (context) =>HomeScreen()
-        },
+
         debugShowCheckedModeBanner: false,
         title: 'Wingman',
         theme: ThemeData(
