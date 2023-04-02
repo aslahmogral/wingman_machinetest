@@ -176,7 +176,7 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
                                     onPressed: () => verifyOtp(),
                                   ),
                                   SizedBox(
-                                    height: Dimens.Padding_small,
+                                    height: Dimens.padding_xl,
                                   ),
                                   WButton(
                                     gradient: false,
