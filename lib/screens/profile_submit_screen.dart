@@ -50,12 +50,13 @@ class _ProfileSubmitScreenState extends State<ProfileSubmitScreen> {
           isLoadingNotifier.value = false;
         } else {
           saveLogginInfo();
-          Navigator.pushReplacement(
+
+          Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(
-                  builder: (context) => HomeScreen(
-                        userName: nameController.text,
-                      )));
+              MaterialPageRoute(builder: (context) => HomeScreen(userName: nameController.text,)),
+              (route) => false);
+
+
           isLoadingNotifier.value = false;
         }
       } catch (e) {

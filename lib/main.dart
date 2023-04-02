@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wingman_machinetest/provider/otp_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:wingman_machinetest/screens/homescreen.dart';
 import 'package:wingman_machinetest/screens/spashscreen.dart';
 
 void main() {
@@ -19,6 +20,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<OtpProvider>(create: (_) => OtpProvider())
       ],
       child: MaterialApp(
+        routes: {
+          '/homescreen' : (context) =>HomeScreen()
+        },
         debugShowCheckedModeBanner: false,
         title: 'Wingman',
         theme: ThemeData(

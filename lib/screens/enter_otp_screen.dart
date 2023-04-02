@@ -62,8 +62,10 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
           if (profileExist) {
             saveLogginInfo();
 
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => HomeScreen()));
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+              (route) => false);
           } else {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => ProfileSubmitScreen()));
