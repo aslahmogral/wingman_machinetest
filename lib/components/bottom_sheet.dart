@@ -20,10 +20,9 @@ class WBottomSheet extends StatelessWidget {
       ],
       color: WColors.dimWhiteColor,
       borderRadius: BorderRadius.only(
-          // topRight: Radius.circular(Dimens.border_radius_lg),
-          // topLeft: Radius.circular(Dimens.border_radius_lg),
-          topLeft: Radius.circular(Dimens.borderRadius_small),
-          topRight: Radius.circular(Dimens.borderRadius_small)),
+        
+          topLeft: Radius.circular(Dimens.padding_xxl),
+          topRight: Radius.circular(Dimens.padding_xxl)),
     );
     return Container(
       decoration: decoration,
