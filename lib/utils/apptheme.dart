@@ -4,10 +4,12 @@ import 'package:wingman_machinetest/utils/colors.dart';
 class WTheme {
   static LinearGradient get primaryGradient {
     return LinearGradient(colors: [
-      WColors.primaryColor,
+      Color.fromARGB(255, 141, 106, 230),
       Color.fromARGB(255, 162, 136, 227),
       Color.fromARGB(255, 169, 145, 230),
-    ], begin: Alignment.centerLeft, end: Alignment.centerRight);
+      Color.fromARGB(255, 174, 153, 227),
+      Color.fromARGB(255, 176, 157, 225),
+    ], begin: Alignment.bottomRight, end: Alignment.topLeft);
   }
 
   static TextStyle get primaryHeaderStyle {
