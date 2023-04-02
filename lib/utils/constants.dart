@@ -14,7 +14,8 @@ class Contents {
 }
 
 class Constants {
-  static const sharedpreference_key = "user";
+  static const user_key = "user";
+  static const token_key = "token";
 
   static const enter_verification_code = "Enter Verification Code";
   static const enter_otp = "Enter OTP";
@@ -26,7 +27,8 @@ class Constants {
   static const retry = "Retry";
   static const close = "Close";
   static const enter_number = "Enter Your Mobile Number";
-  static const we_will_send_otp = 'We will send you one time \n\t\t\t\t\t\t\t password (OTP)';
+  static const we_will_send_otp =
+      'We will send you one time \n\t\t\t\t\t\t\t password (OTP)';
   static const carrier_rate = "*Carrier rates may apply*";
   static const continuee = "Continue";
   static const india_code = "+91 India";
@@ -44,7 +46,4 @@ class Constants {
   // static const close = "Close";
   // static const close = "Close";
   // static const close = "Close";
-
-
-  
 }

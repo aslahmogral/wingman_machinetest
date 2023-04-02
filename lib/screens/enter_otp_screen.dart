@@ -2,7 +2,6 @@ import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wingman_machinetest/components/animation_container.dart';
-import 'package:wingman_machinetest/components/bottom_sheet.dart';
 import 'package:wingman_machinetest/components/button.dart';
 import 'package:wingman_machinetest/components/custom_theme.dart';
 import 'package:wingman_machinetest/components/loader.dart';
@@ -40,7 +39,7 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
 
   saveLogginInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(Constants.sharedpreference_key, 'user');
+    prefs.setString(Constants.user_key, 'user');
   }
 
   verifyOtp() async {
@@ -66,13 +65,8 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
             Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (context) => HomeScreen()));
           } else {
-            var token = Provider.of<OtpProvider>(context, listen: false).token;
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ProfileSubmitScreen(
-                          token: token,
-                        )));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ProfileSubmitScreen()));
           }
           isLoadingNotifier.value = false;
         } else {

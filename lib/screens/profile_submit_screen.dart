@@ -15,8 +15,9 @@ import 'package:wingman_machinetest/utils/constants.dart';
 import 'package:wingman_machinetest/utils/dimens.dart';
 
 class ProfileSubmitScreen extends StatefulWidget {
-  final String token;
-  const ProfileSubmitScreen({super.key, required this.token});
+  const ProfileSubmitScreen({
+    super.key,
+  });
 
   @override
   State<ProfileSubmitScreen> createState() => _ProfileSubmitScreenState();
@@ -30,19 +31,20 @@ class _ProfileSubmitScreenState extends State<ProfileSubmitScreen> {
 
   saveLogginInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(Constants.sharedpreference_key, nameController.text);
+    prefs.setString(Constants.user_key, nameController.text);
   }
 
-  postNameAndEmail(String name, email, token) async {
+  postNameAndEmail(String name, email) async {
     bool isValidated = _formKey.currentState!.validate();
-    final tokenr = await Provider.of<OtpProvider>(context, listen: false).token;
 
     if (isValidated) {
       isLoadingNotifier.value = true;
 
       try {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String token = prefs.getString(Constants.token_key).toString();
         final response = await Provider.of<OtpProvider>(context, listen: false)
-            .profileSubmit(name: name, email: email, token: tokenr);
+            .profileSubmit(name: name, email: email, token: token);
 
         if (!response.success!) {
           isLoadingNotifier.value = false;
@@ -125,9 +127,9 @@ class _ProfileSubmitScreenState extends State<ProfileSubmitScreen> {
                                       WButton(
                                         label: Constants.submit,
                                         onPressed: () => postNameAndEmail(
-                                            nameController.text,
-                                            emailController.text,
-                                            widget.token),
+                                          nameController.text,
+                                          emailController.text,
+                                        ),
                                         gradient: true,
                                       )
                                     ],

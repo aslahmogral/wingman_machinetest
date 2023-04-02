@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wingman_machinetest/components/animation_container.dart';
-import 'package:wingman_machinetest/components/bottom_sheet.dart';
 import 'package:wingman_machinetest/components/button.dart';
 import 'package:wingman_machinetest/components/custom_theme.dart';
 import 'package:wingman_machinetest/screens/send_otp_screen.dart';
@@ -20,6 +19,23 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String token = '';
+
+  getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      token = prefs.getString(Constants.token_key).toString();
+    });
+
+    print(token);
+  }
+
+  @override
+  void initState() {
+    getToken();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -42,25 +58,28 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
           body: GestureDetector(
-            onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
-            child:CustomTheme(child1: AnimationContainer(lottie: 'animation/avatar.json'), child2:  Container(
-                        height: MediaQuery.of(context).size.height / 2.2,
-                        child: SingleChildScrollView(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(Contents.para1),
-                              Text(Contents.para2),
-                              Text(Contents.para3),
-                              Text(Contents.para4),
-                              Text(Contents.para5),
-                            ],
+              onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
+              child: CustomTheme(
+                  child1: AnimationContainer(lottie: 'animation/avatar.json'),
+                  child2: Container(
+                    height: MediaQuery.of(context).size.height / 2.2,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            "your token is $token",
+                            style: WTheme.primaryHeaderStyle,
                           ),
-                        ),
-                      ))
-            
-            
-              )),
+                          Text(Contents.para1),
+                          Text(Contents.para2),
+                          Text(Contents.para3),
+                          Text(Contents.para4),
+                          Text(Contents.para5),
+                        ],
+                      ),
+                    ),
+                  )))),
     );
   }
 
@@ -72,7 +91,8 @@ class _HomeScreenState extends State<HomeScreen> {
               content: Container(
                 decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(Dimens.borderRadius_small)),
+                    borderRadius:
+                        BorderRadius.circular(Dimens.borderRadius_small)),
                 child: Padding(
                   padding: const EdgeInsets.all(Dimens.borderRadius_small),
                   child: Column(
@@ -82,7 +102,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           onTap: () async {
                             final SharedPreferences pref =
                                 await SharedPreferences.getInstance();
-                            pref.remove(Constants.sharedpreference_key);
+                            pref.remove(Constants.user_key);
+                            pref.remove(Constants.token_key);
                             Navigator.pop(context);
                             Navigator.pushReplacement(
                                 context,
@@ -94,7 +115,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         height: Dimens.Padding_small,
                       ),
-                      InkWell(onTap: () => exit(0), child: Text(Constants.exit)),
+                      InkWell(
+                          onTap: () => exit(0), child: Text(Constants.exit)),
                       Divider(),
                       SizedBox(
                         height: Dimens.Padding_small,
