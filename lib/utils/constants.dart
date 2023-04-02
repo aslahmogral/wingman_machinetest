@@ -19,10 +19,10 @@ class Constants {
 
   static const enter_verification_code = "Enter Verification Code";
   static const enter_otp = "Enter OTP";
-  static const sent_otp_to_mobile = "We have sent otp on your numberP";
+  static const sent_otp_to_mobile = "We have sent otp on your number";
   static const otp_empty_validator = "plz enter code to continue";
   static const mobile_empty_validator = "Mobile Number is Empty";
-  static const mobile_validator = "Invalid Mobile Number";
+  static const invalid_mobilenumber = "Invalid Mobile Number";
   static const verify = "Verify";
   static const retry = "Retry";
   static const close = "Close";

@@ -44,6 +44,10 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
 
   verifyOtp() async {
     bool isValidated = _formKey.currentState!.validate();
+    if (otpController.text.isEmpty) {
+      otpEmptyValidatorDialogueMethod();
+    }
+
     if (isValidated) {
       isLoadingNotifier.value = true;
 
@@ -63,9 +67,9 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
             saveLogginInfo();
 
             Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => HomeScreen()),
-              (route) => false);
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen()),
+                (route) => false);
           } else {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => ProfileSubmitScreen()));
@@ -74,33 +78,71 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
         } else {
           isLoadingNotifier.value = false;
 
-          showDialog(
-              context: context,
-              builder: (_) => AlertDialog(
-                    title: Text(
-                      'Something Went Wrong',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    content: Column(
+          otpErrorValidatorMethod();
+        }
+      }
+    }
+  }
+
+  Future<dynamic> otpErrorValidatorMethod() {
+    return showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              backgroundColor: Colors.transparent,
+              content: Container(
+                decoration: WTheme.dialogDecoration,
+                child: Padding(
+                  padding: const EdgeInsets.all(Dimens.padding),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Something Went Wrong',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      SizedBox(
+                        height: Dimens.padding,
+                      ),
+                      Text('The Otp you have entered'),
+                      Text(otpController.text,style: TextStyle(color: Colors.red),),
+                      Text('Might be wrong'),
+                      SizedBox(
+                        height: Dimens.Padding_small,
+                      ),
+                      WButton(
+                        label: Constants.close,
+                        gradient: true,
+                        onPressed: () => Navigator.pop(context),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ));
+  }
+
+  Future<dynamic> otpEmptyValidatorDialogueMethod() {
+    return showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              backgroundColor: Colors.transparent,
+              content: Container(
+                  decoration: WTheme.dialogDecoration,
+                  child: Padding(
+                    padding: const EdgeInsets.all(30),
+                    child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text('The Otp you have entered'),
-                        Text(otpController.text),
-                        Text('Might be wrong'),
+                        Text(Constants.otp_empty_validator),
                         SizedBox(
                           height: Dimens.Padding_small,
                         ),
                         WButton(
-                          label: Constants.close,
-                          gradient: true,
-                          onPressed: () => Navigator.pop(context),
-                        )
+                            label: Constants.close,
+                            gradient: true,
+                            onPressed: () => Navigator.pop(context)),
                       ],
                     ),
-                  ));
-        }
-      }
-    }
+                  )),
+            ));
   }
 
   @override
@@ -139,13 +181,14 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
                                     height: Dimens.Padding_large,
                                   ),
                                   Text(Constants.sent_otp_to_mobile),
-                                  Text('+91-${widget.mobileNumber}'),
+                                  Text('+91-${widget.mobileNumber}',style: TextStyle(color: WColors.primaryColor),),
                                   SizedBox(
                                     height: Dimens.padding,
                                   ),
                                   Pinput(
                                     validator: (code) {
-                                      if (code!.isEmpty) {
+                                      if (code!.isEmpty ||
+                                          otpController.text.isEmpty) {
                                         return Constants.otp_empty_validator;
                                       }
 
@@ -188,7 +231,8 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
                                           widget.mobileNumber);
                                       Navigator.pop(context);
                                     },
-                                  )
+                                  ),
+                                  SizedBox(height: Dimens.padding_xl,)
                                 ],
                               ),
                             ),

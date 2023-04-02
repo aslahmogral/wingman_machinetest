@@ -121,6 +121,7 @@ class _SendOtpScreenState extends State<SendOtpScreen> {
                                     label: Constants.continuee,
                                     onPressed: () => sendOtp(),
                                   ),
+                                  SizedBox(height: Dimens.padding_xl,)
                                 ],
                               ),
                             ),
@@ -140,7 +141,7 @@ class _SendOtpScreenState extends State<SendOtpScreen> {
     } else if (!RegExp(
             r'^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$')
         .hasMatch(value)) {
-      return Constants.mobile_empty_validator;
+      return Constants.invalid_mobilenumber;
     }
     return null;
   }

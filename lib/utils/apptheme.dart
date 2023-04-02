@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wingman_machinetest/utils/colors.dart';
+import 'package:wingman_machinetest/utils/dimens.dart';
 
 class WTheme {
   static LinearGradient get primaryGradient {
@@ -18,6 +19,14 @@ class WTheme {
 
   static TextStyle get primaryHeaderStyle2 {
     return TextStyle(fontSize: 26, fontWeight: FontWeight.bold);
+  }
+
+
+ static BoxDecoration get dialogDecoration {
+    return  BoxDecoration(
+                    color: Colors.white,
+                    borderRadius:
+                        BorderRadius.circular(Dimens.borderRadius_small));
   }
 
   

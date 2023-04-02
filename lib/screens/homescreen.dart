@@ -89,10 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (_) => AlertDialog(
               backgroundColor: Colors.transparent,
               content: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius:
-                        BorderRadius.circular(Dimens.borderRadius_small)),
+                decoration:WTheme.dialogDecoration,
                 child: Padding(
                   padding: const EdgeInsets.all(Dimens.borderRadius_small),
                   child: Column(

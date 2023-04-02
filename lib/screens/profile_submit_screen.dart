@@ -123,7 +123,7 @@ class _ProfileSubmitScreenState extends State<ProfileSubmitScreen> {
                                         },
                                       ),
                                       SizedBox(
-                                        height: Dimens.padding,
+                                        height: Dimens.padding_xxl,
                                       ),
                                       WButton(
                                         label: Constants.submit,
@@ -132,7 +132,10 @@ class _ProfileSubmitScreenState extends State<ProfileSubmitScreen> {
                                           emailController.text,
                                         ),
                                         gradient: true,
-                                      )
+                                      ),
+                                       SizedBox(
+                                        height: Dimens.padding_xl,
+                                      ),
                                     ],
                                   ),
                                 ),
